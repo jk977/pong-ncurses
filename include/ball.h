@@ -5,12 +5,10 @@
 
 #include "vector.h"
 
-chtype const ball_ch = '*';
-
 struct ball_state {
+    chtype        chr;      // character to use as ball
+    struct vector pos;      // ball position
     struct vector velocity;
-    int x_pos;
-    int y_pos;
 };
 
 #endif // BALL_H_

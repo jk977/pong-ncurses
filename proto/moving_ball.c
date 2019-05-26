@@ -2,10 +2,10 @@
 
 #ifdef DEBUG
 #   include <stdio.h>
+#   include <string.h>
 #endif
 
 #include <stdlib.h>
-#include <string.h>
 
 #include <locale.h>
 #include <curses.h>
@@ -18,8 +18,8 @@
 #define REFRESH_RATE 30 /* Hz */
 
 static struct ball_state ball = {
-    .x_pos = 0,
-    .y_pos = 0,
+    .chr = '*',
+    .pos = {0,0},
     .velocity = {1,1}
 };
 
@@ -59,15 +59,17 @@ void update_screen(void) {
      * function to test animations
      */
 
-    int x_next = ball.x_pos;
-    int y_next = ball.y_pos;
+    int x_next = ball.pos.x;
+    int y_next = ball.pos.y;
 
     int x_max;
     int y_max;
     getmaxyx(stdscr, y_max, x_max);
 
-    mvdelch(ball.y_pos, ball.x_pos);
+    // remove old ball location
+    mvdelch(ball.pos.y, ball.pos.x);
 
+    // velocity treated as position delta for each unit of time
     x_next += ball.velocity.x;
     y_next += ball.velocity.y;
 
@@ -75,7 +77,7 @@ void update_screen(void) {
     x_next %= x_max;
     y_next %= y_max;
 
-    if (mvaddch(y_next, x_next, ball_ch) == ERR
+    if (mvaddch(y_next, x_next, ball.chr) == ERR
             && (x_next >= x_max)
             && (y_next >= y_max)) {
         // note: mvaddch returns ERR if char is written to bottom-right,
@@ -83,8 +85,8 @@ void update_screen(void) {
         TRACE("update_screen: Failed to move ball to (%d,%d)\n", x_next, y_next);
     } else {
         // no error, so update ball position
-        ball.x_pos = x_next;
-        ball.y_pos = y_next;
+        ball.pos.x = x_next;
+        ball.pos.y = y_next;
     }
 
 #ifdef DEBUG
@@ -92,13 +94,13 @@ void update_screen(void) {
     static char current[25];
     static char max[25];
 
-    sprintf(current, "Current: (%d,%d)", ball.x_pos, ball.y_pos);
+    sprintf(current, "Current: (%d,%d)", ball.pos.x, ball.pos.y);
     sprintf(max, "Bound: (%d,%d)", x_max, y_max);
 
     mvaddstr(0, 0, current);
     mvaddstr(1, 0, max);
 
-    move(ball.y_pos, ball.x_pos);
+    move(ball.pos.y, ball.pos.x);
 #endif
 
     refresh();

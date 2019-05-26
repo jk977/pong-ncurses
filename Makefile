@@ -7,6 +7,10 @@ ifdef DEBUG
 	CFLAGS += -g3 -DDEBUG
 endif
 
+ifdef STEP
+	CFLAGS += -DSTEP
+endif
+
 .PHONY: all buildpath tags clean
 
 
