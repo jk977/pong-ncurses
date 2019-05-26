@@ -17,7 +17,7 @@ endif
 # compile *.o using source file of same base name
 # ===============================================
 %.o: src/%.c
-	$(CC) $(CFLAGS) $< -c -o $(BUILD_PATH)/src/$@
+	$(CC) $(CFLAGS) $< -c -o "$(BUILD_PATH)"/src/$@
 
 
 ###############
@@ -32,7 +32,21 @@ all: buildpath clean src/main.c
 # ensures proper build layout
 # ===========================
 buildpath:
-	mkdir -p $(BUILD_PATH)/src $(BUILD_PATH)/tests
+	mkdir -p $(BUILD_PATH)/src $(BUILD_PATH)/proto
+
+
+#####################
+# prototype targets #
+#####################
+
+# compiles prototypes made as proof-of-concept programs
+# =====================================================
+%.proto: proto/%.c
+	$(CC) $(CFLAGS) $^ -o "$(BUILD_PATH)"/proto/$*
+
+# compiles all prototypes
+# =======================
+proto: buildpath animated_hello_world.proto
 
 
 ################
@@ -47,4 +61,4 @@ tags:
 # remove all compiled files
 # =========================
 clean:
-	find $(BUILD_PATH) -type f -exec rm -f {} \;
+	find "$(BUILD_PATH)" -type f -exec rm -f {} \;
