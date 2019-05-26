@@ -2,19 +2,27 @@
 
 #include <locale.h>
 #include <curses.h>
-#include <signal.h>
 
-void setup_curses(int argc, char** argv) {
+#include "config.h"
+
+void setup_curses() {
     /*
-     * initializes and configures curses window
+     * initializes and configures curses window.
      */
 
-    (void) argc;
-    (void) argv;
-
+    setlocale(LC_ALL, "en_US.utf-8");
     initscr();
+
+    if (has_colors()) {
+        start_color();
+        init_pair(PONG_COLOR_PAIR, PONG_FG, PONG_BG);
+        bkgd(COLOR_PAIR(PONG_COLOR_PAIR));
+    }
+
     cbreak();
     noecho();
+
+    scrollok(stdscr, FALSE);
     intrflush(stdscr, FALSE);
     keypad(stdscr, TRUE);
 }
@@ -28,7 +36,9 @@ void cleanup(void) {
 }
 
 int main(int argc, char** argv) {
-    setlocale(LC_ALL, "en_US.utf-8");
+    (void) argc;
+    (void) argv;
+
     setup_curses(argc, argv);
     atexit(cleanup);
 
