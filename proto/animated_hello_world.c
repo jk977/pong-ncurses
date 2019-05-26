@@ -2,8 +2,6 @@
 
 #include <locale.h>
 #include <curses.h>
-
-#include <signal.h>
 #include <unistd.h>
 
 #include "config.h"
@@ -56,10 +54,7 @@ void update_screen(void) {
     refresh();
 }
 
-int main(int argc, char** argv) {
-    (void) argc;
-    (void) argv;
-
+int main(void) {
     setup_curses();
     atexit(cleanup);
 
