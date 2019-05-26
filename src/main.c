@@ -5,7 +5,7 @@
 
 #include "config.h"
 
-void setup_curses() {
+void setup_curses(void) {
     /*
      * initializes and configures curses window.
      */
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
     (void) argc;
     (void) argv;
 
-    setup_curses(argc, argv);
+    setup_curses();
     atexit(cleanup);
 
     addstr("hello, world!");

@@ -26,8 +26,8 @@ endif
 
 # creates dulite executable in $(BUILD_PATH)
 # ==========================================
-all: buildpath src/main.c
-	$(CC) $(CFLAGS) $$(find "$(BUILD_PATH)"/src/ -name "*.o") src/main.c -o $(BUILD_PATH)/pong
+all: buildpath clean src/main.c
+	$(CC) $(CFLAGS) $(shell find "$(BUILD_PATH)"/src/ -name "*.o") src/main.c -o $(BUILD_PATH)/pong
 
 # ensures proper build layout
 # ===========================
