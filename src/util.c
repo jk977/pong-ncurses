@@ -70,3 +70,26 @@ struct vector get_max_bounds(WINDOW* win) {
 
     return (struct vector) { x, y };
 }
+
+void* find_first_null(void* ptr, size_t count) {
+    /*
+     * get first null pointer in array of pointers.
+     *
+     * note: like with zero_pointers(), ptr must be an array
+     *       of pointers (void**).
+     *
+     * returns the address of the first null pointer, or null if all pointers
+     * are nonnull.
+     */
+
+    void** ary_ptrs = (void**) ptr;
+
+    for (size_t i = 0; i < count; ++i) {
+        if (ary_ptrs[i] == NULL) {
+            return &ary_ptrs[i];
+        }
+    }
+
+    return NULL;
+}
+

@@ -101,7 +101,7 @@ struct board* board_init(bool is_multiplayer) {
         return NULL;
     }
 
-    unsigned int wall_count = 3;
+    size_t wall_count = 3;
     struct wall** ws = malloc(sizeof(*ws) * wall_count);
 
     if (ws == NULL) {
@@ -129,13 +129,51 @@ void board_destroy(struct board* b) {
 }
 
 int board_add_player(struct board* b, struct vector pos) {
-    (void) b;
-    (void) pos;
+    /*
+     * add new player to board.
+     * returns 0 on success, -1 otherwise.
+     */
+
+    struct paddle** p_next = find_first_null(b->players, BOARD_PLAYER_MAX);
+
+    if (p_next == NULL) {
+        // max number of players, can't add more
+        return -1;
+    }
+
+    *p_next = malloc(sizeof **p_next);
+
+    if (*p_next == NULL) {
+        // failed to allocate memory
+        return -1;
+    }
+
+    **p_next = (struct paddle) {
+        .height = PONG_PADDLE_HEIGHT,
+        .pos    = pos
+    };
+
     return 0;
 }
 
 int board_add_wall(struct board* b, struct wall w) {
-    (void) b;
-    (void) w;
+    /*
+     * adds wall to board, essentially the same way as board_add_player()
+     * returns 0 on success, -1 otherwise.
+     */
+
+    struct wall** p_next = find_first_null(b->walls, b->wall_count);
+
+    if (p_next == NULL) {
+        return -1;
+    }
+
+    *p_next = malloc(sizeof **p_next);
+
+    if (*p_next == NULL) {
+        return -1;
+    }
+
+    **p_next = w;
     return 0;
 }

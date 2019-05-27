@@ -28,5 +28,6 @@ void setup_curses(void);
 void sanity_check(void);
 
 struct vector get_max_bounds(WINDOW* win);
+void* find_first_null(void* ptr, size_t count);
 
 #endif // UTIL_H_
