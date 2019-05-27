@@ -4,7 +4,7 @@
 #include <curses.h>
 
 #define PONG_REFRESH_RATE   30 /* Hz */
-#define PONG_PADDLE_HEIGHT  3  /* blocks */
+#define PONG_PADDLE_HEIGHT  3  /* rows */
 
 // minimum window dimension requirements
 #define PONG_REQUIRED_X 50

@@ -8,4 +8,6 @@ struct vector {
     distance_t y;
 };
 
+extern struct vector const zero_vector;
+
 #endif // VECTOR_H_

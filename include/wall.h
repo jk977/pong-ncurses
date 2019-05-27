@@ -5,10 +5,16 @@
 
 #include "vector.h"
 
+enum direction { HORIZONTAL, VERTICAL };
+enum wallstyle { DASHED, SOLID };
+
 struct wall {
     struct vector pos;
-    int height;
+    int length;
     bool tangible;
+
+    enum direction dir;
+    enum wallstyle style;
 };
 
 #endif // WALL_H_

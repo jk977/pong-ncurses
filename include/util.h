@@ -7,6 +7,9 @@
 #define UTIL_H_
 
 #include <stdio.h>
+#include <curses.h>
+
+#include "vector.h"
 
 #define ERROR(...)                      \
     do {                                \
@@ -23,5 +26,7 @@
 
 void setup_curses(void);
 void sanity_check(void);
+
+struct vector get_max_bounds(WINDOW* win);
 
 #endif // UTIL_H_

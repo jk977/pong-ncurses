@@ -5,7 +5,7 @@
 
 #include "vector.h"
 
-struct ball_state {
+struct ball {
     chtype        chr;          // character to use as ball
     struct vector pos;          // ball position
     struct vector velocity;
