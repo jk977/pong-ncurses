@@ -11,7 +11,7 @@ ifdef STEP
 	CFLAGS += -DSTEP
 endif
 
-.PHONY: all buildpath tags clean
+.PHONY: all buildpath tags clean proto
 
 
 ################
@@ -30,8 +30,8 @@ endif
 
 # creates dulite executable in $(BUILD_PATH)
 # ==========================================
-all: buildpath clean src/main.c
-	$(CC) $(CFLAGS) $(shell find "$(BUILD_PATH)"/src/ -name "*.o") src/main.c -o $(BUILD_PATH)/pong
+all: buildpath clean util.o src/main.c
+	$(CC) $(CFLAGS) $(shell find "$(BUILD_PATH)"/src/ -name "*.o") src/main.c -o "$(BUILD_PATH)"/pong
 
 # ensures proper build layout
 # ===========================
@@ -46,11 +46,11 @@ buildpath:
 # compiles prototypes made as proof-of-concept programs
 # =====================================================
 %.proto: proto/%.c
-	$(CC) $(CFLAGS) $^ -o "$(BUILD_PATH)"/proto/$*
+	$(CC) $(CFLAGS) $(shell find "$(BUILD_PATH)"/src/ -name "*.o") $^ -o "$(BUILD_PATH)"/proto/$*
 
 # compiles all prototypes
 # =======================
-proto: buildpath animated_hello_world.proto moving_ball.proto
+proto: all animated_hello_world.proto moving_ball.proto
 
 
 ################

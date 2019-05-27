@@ -21,4 +21,7 @@
 #   define TRACE(...)
 #endif
 
+void setup_curses(void);
+void sanity_check(void);
+
 #endif // UTIL_H_

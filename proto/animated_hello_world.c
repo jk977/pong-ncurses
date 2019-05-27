@@ -1,32 +1,9 @@
 #include <stdlib.h>
 
-#include <locale.h>
 #include <curses.h>
 #include <unistd.h>
 
-#include "config.h"
-
-void setup_curses(void) {
-    /*
-     * initializes and configures curses window.
-     */
-
-    setlocale(LC_ALL, "en_US.utf-8");
-    initscr();
-
-    if (has_colors()) {
-        start_color();
-        init_pair(PONG_COLOR_PAIR, PONG_FG, PONG_BG);
-        bkgd(COLOR_PAIR(PONG_COLOR_PAIR));
-    }
-
-    cbreak();
-    noecho();
-
-    scrollok(stdscr, FALSE);
-    intrflush(stdscr, FALSE);
-    keypad(stdscr, TRUE);
-}
+#include "util.h"
 
 void cleanup(void) {
     /*
@@ -63,5 +40,5 @@ int main(void) {
         sleep(1);
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }

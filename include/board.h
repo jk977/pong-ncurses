@@ -1,19 +1,19 @@
 #ifndef BOARD_H_
 #define BOARD_H_
 
+#include <stdbool.h>
+
 #include "ball.h"
 #include "paddle.h"
 #include "wall.h"
 
 struct board {
     struct paddle paddles[2];
+    struct wall walls[4];
     struct ball ball;
-
-    struct wall* walls;
-    unsigned int wall_count;
 };
 
-struct board* board_init(void);
+struct board* board_init(bool is_multiplayer);
 void board_destroy(struct board* b);
 
 int board_add_player(struct board* b, struct vector pos);
