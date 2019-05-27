@@ -6,9 +6,10 @@
 #include "vector.h"
 
 struct ball_state {
-    chtype        chr;      // character to use as ball
-    struct vector pos;      // ball position
+    chtype        chr;          // character to use as ball
+    struct vector pos;          // ball position
     struct vector velocity;
+    int           multiplier;   // multiplier for ball speed
 };
 
 #endif // BALL_H_

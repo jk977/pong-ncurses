@@ -50,7 +50,7 @@ buildpath:
 
 # compiles all prototypes
 # =======================
-proto: buildpath animated_hello_world.proto
+proto: buildpath animated_hello_world.proto moving_ball.proto
 
 
 ################

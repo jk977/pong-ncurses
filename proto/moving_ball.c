@@ -20,7 +20,8 @@
 static struct ball_state ball = {
     .chr = '*',
     .pos = {0,0},
-    .velocity = {1,1}
+    .velocity = {1,1},
+    .multiplier = 1
 };
 
 void setup_curses(void) {
