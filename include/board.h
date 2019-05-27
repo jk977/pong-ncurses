@@ -13,4 +13,12 @@ struct board {
     unsigned int wall_count;
 };
 
+struct board* board_init(void);
+void board_destroy(struct board* b);
+
+int board_add_player(struct board* b, struct vector pos);
+int board_add_wall(struct board* b, struct vector pos, int height);
+
+void board_update(struct board* b);
+
 #endif // BOARD_H_
