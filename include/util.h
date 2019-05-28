@@ -7,7 +7,6 @@
 #define UTIL_H_
 
 #include <stdio.h>
-#include <curses.h>
 
 #include "vector.h"
 
@@ -27,9 +26,6 @@ extern "C" {
 #else
 #   define TRACE(...)
 #endif
-
-void sanity_check(void);
-void setup_curses(void);
 
 struct vector get_max_bounds();
 void* find_first_null(void* ptr, size_t count);

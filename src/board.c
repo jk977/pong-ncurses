@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <curses.h>
 
 #include "board.h"
 #include "config.h"
@@ -113,7 +112,7 @@ static void setup_multiplayer(struct board* b) {
 
 struct board* board_init(bool is_multiplayer) {
     /*
-     * constructor for board. initscr() must be called before calling this.
+     * constructor for board.
      */
 
     struct board* b = malloc(sizeof *b);
