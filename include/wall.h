@@ -10,7 +10,7 @@ extern "C" {
 #endif
 
 enum direction { HORIZONTAL, VERTICAL };
-enum wallstyle { DASHED, SOLID };
+enum wallstyle { INVISIBLE, DASHED, SOLID };
 
 struct wall {
     struct vector pos;

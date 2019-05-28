@@ -14,9 +14,9 @@ extern "C" {
 #define PONG_REQUIRED_X 50
 #define PONG_REQUIRED_Y 20
 
-#define PONG_COLOR_PAIR 1
-#define PONG_BG         COLOR_BLUE
-#define PONG_FG         COLOR_WHITE
+#define PONG_MAIN_COLOR 1
+#define PONG_MAIN_BG    COLOR_BLUE
+#define PONG_MAIN_FG    COLOR_WHITE
 
 #ifdef __cplusplus
 }

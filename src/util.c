@@ -50,8 +50,8 @@ void setup_curses(void) {
 
     if (has_colors()) {
         start_color();
-        init_pair(PONG_COLOR_PAIR, PONG_FG, PONG_BG);
-        bkgd(COLOR_PAIR(PONG_COLOR_PAIR));
+        init_pair(PONG_MAIN_COLOR, PONG_MAIN_FG, PONG_MAIN_BG);
+        bkgd(COLOR_PAIR(PONG_MAIN_COLOR));
     }
 
     cbreak();       // game must have inputs immediately available

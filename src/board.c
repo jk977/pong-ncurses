@@ -18,25 +18,31 @@ static void zero_pointers(void* ptr, size_t const count) {
     }
 }
 
-static void setup_multiplayer(struct board* b) {
+static void setup_singleplayer(struct board* b) {
     /*
-     * set 2 paddles, and only horizontal boundaries.
+     * only set 1 paddle, and have a wall covering the entire left side.
      */
 
     struct vector bounds = get_max_bounds(stdscr);
     int x_center = bounds.x / 2;
     int y_center = bounds.y / 2;
 
-    board_add_player(b, (struct vector) {10, y_center - 1});
+    b->ball = (struct ball) {
+        .chr = BALL_DEFAULT,
+        .pos = {x_center, y_center},
+        .velocity = {1, 1},
+        .multiplier = 1
+    };
+
     board_add_player(b, (struct vector) {bounds.x - 10, y_center - 1});
 
-    // intangible center line dividing the players' sides
+    // wall acting as perfect opponent
     board_add_wall(b, (struct wall) {
-        .pos      = {x_center, BOARD_OUTER_BUFFER},
+        .pos      = {10, y_center - 1},
         .length   = bounds.y - 2*BOARD_OUTER_BUFFER,
         .tangible = false,
         .dir      = VERTICAL,
-        .style    = DASHED
+        .style    = SOLID
     });
 
     // upper playing field boundary
@@ -58,23 +64,32 @@ static void setup_multiplayer(struct board* b) {
     });
 }
 
-static void setup_singleplayer(struct board* b) {
+static void setup_multiplayer(struct board* b) {
     /*
-     * only set 1 paddle, and have a wall covering the entire left side.
+     * set 2 paddles, and only horizontal boundaries.
      */
 
     struct vector bounds = get_max_bounds(stdscr);
+    int x_center = bounds.x / 2;
     int y_center = bounds.y / 2;
 
+    board_add_player(b, (struct vector) {10, y_center - 1});
     board_add_player(b, (struct vector) {bounds.x - 10, y_center - 1});
 
-    // wall acting as perfect opponent
+    b->ball = (struct ball) {
+        .chr = BALL_DEFAULT,
+        .pos = {x_center, y_center},
+        .velocity = {-1, 1},
+        .multiplier = 1
+    };
+
+    // intangible center line dividing the players' sides
     board_add_wall(b, (struct wall) {
-        .pos      = {10, y_center - 1},
+        .pos      = {x_center, BOARD_OUTER_BUFFER},
         .length   = bounds.y - 2*BOARD_OUTER_BUFFER,
         .tangible = false,
         .dir      = VERTICAL,
-        .style    = SOLID
+        .style    = DASHED
     });
 
     // upper playing field boundary
