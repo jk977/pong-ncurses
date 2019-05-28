@@ -93,3 +93,21 @@ void* find_first_null(void* ptr, size_t count) {
     return NULL;
 }
 
+void* malloc_first_null(void* ptr, size_t count, size_t type_size) {
+    /*
+     * finds first null pointer in list of pointers <ptr>, then
+     * mallocs a pointer in its place and returns the malloc'd pointer.
+     * since pointers of type void* are opaque, the size of the base type
+     * <type_size> must be provided for the malloc
+     */
+
+    void** p_next = find_first_null(ptr, count);
+
+    if (p_next == NULL) {
+        return NULL;
+    }
+
+    *p_next = malloc(type_size);
+
+    return *p_next;
+}

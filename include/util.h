@@ -29,5 +29,6 @@ void setup_curses(void);
 
 struct vector get_max_bounds(WINDOW* win);
 void* find_first_null(void* ptr, size_t count);
+void* malloc_first_null(void* ptr, size_t count, size_t type_size);
 
 #endif // UTIL_H_

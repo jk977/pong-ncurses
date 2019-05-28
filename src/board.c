@@ -161,21 +161,14 @@ int board_add_player(struct board* b, struct vector pos) {
      * returns 0 on success, -1 otherwise.
      */
 
-    struct paddle** p_next = find_first_null(b->players, BOARD_PLAYER_MAX);
+    struct paddle* next = malloc_first_null(b->players, BOARD_PLAYER_MAX, sizeof *next);
 
-    if (p_next == NULL) {
-        // max number of players, can't add more
+    if (next == NULL) {
+        // max number of players or failed to allocate memory
         return -1;
     }
 
-    *p_next = malloc(sizeof **p_next);
-
-    if (*p_next == NULL) {
-        // failed to allocate memory
-        return -1;
-    }
-
-    **p_next = (struct paddle) {
+    *next = (struct paddle) {
         .height = PONG_PADDLE_HEIGHT,
         .pos    = pos
     };
@@ -185,23 +178,17 @@ int board_add_player(struct board* b, struct vector pos) {
 
 int board_add_wall(struct board* b, struct wall w) {
     /*
-     * adds wall to board, essentially the same way as board_add_player()
+     * adds wall to board, essentially the same way as board_add_player().
      * returns 0 on success, -1 otherwise.
      */
 
-    struct wall** p_next = find_first_null(b->walls, b->wall_count);
+    struct wall* next = malloc_first_null(b->walls, b->wall_count, sizeof *next);
 
-    if (p_next == NULL) {
+    if (next == NULL) {
         return -1;
     }
 
-    *p_next = malloc(sizeof **p_next);
-
-    if (*p_next == NULL) {
-        return -1;
-    }
-
-    **p_next = w;
+    *next = w;
 
     return 0;
 }
