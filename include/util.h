@@ -11,6 +11,10 @@
 
 #include "vector.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define ERROR(...)                      \
     do {                                \
         fprintf(stderr, "pong: ");      \
@@ -30,5 +34,9 @@ void setup_curses(void);
 struct vector get_max_bounds(WINDOW* win);
 void* find_first_null(void* ptr, size_t count);
 void* malloc_first_null(void* ptr, size_t count, size_t type_size);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // UTIL_H_

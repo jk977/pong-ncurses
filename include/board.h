@@ -1,6 +1,10 @@
 #ifndef BOARD_H_
 #define BOARD_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 
 #include "ball.h"
@@ -25,5 +29,9 @@ int board_add_player(struct board* b, struct vector pos);
 int board_add_wall(struct board* b, struct wall w);
 
 void board_update(struct board* b);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // BOARD_H_

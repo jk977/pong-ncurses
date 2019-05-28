@@ -5,6 +5,10 @@
 
 #include "vector.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum direction { HORIZONTAL, VERTICAL };
 enum wallstyle { DASHED, SOLID };
 
@@ -16,5 +20,9 @@ struct wall {
     enum direction dir;
     enum wallstyle style;
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // WALL_H_
