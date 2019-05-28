@@ -16,7 +16,7 @@
 
 #define REFRESH_RATE 30 /* Hz */
 
-static struct ball_state ball = {
+static struct ball ball = {
     .chr = '*',
     .pos = {0,0},
     .velocity = {1,1},
