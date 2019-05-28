@@ -154,7 +154,10 @@ void board_destroy(struct board* b) {
 
 int board_add_player(struct board* b, struct vector pos) {
     /*
-     * add new player to board.
+     * add new player to board. order is important; the first to be added
+     * is player 1, second is player 2 (and if more players were supported,
+     * the pattern would continue).
+     *
      * returns 0 on success, -1 otherwise.
      */
 
@@ -199,5 +202,6 @@ int board_add_wall(struct board* b, struct wall w) {
     }
 
     **p_next = w;
+
     return 0;
 }
