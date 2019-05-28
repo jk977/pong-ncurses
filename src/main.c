@@ -2,6 +2,7 @@
 #include <curses.h>
 
 #include "board.h"
+#include "render.h"
 #include "util.h"
 
 void cleanup(void) {
@@ -18,7 +19,8 @@ int main(void) {
     atexit(cleanup);
 
     struct board* b = board_init(true);
-    board_update(b);
+    render_board(b);
+    refresh();
     getch();
 
     return 0;

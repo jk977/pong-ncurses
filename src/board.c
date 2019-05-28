@@ -23,7 +23,7 @@ static void setup_singleplayer(struct board* b) {
      * only set 1 paddle, and have a wall covering the entire left side.
      */
 
-    struct vector bounds = get_max_bounds(stdscr);
+    struct vector bounds = get_max_bounds();
     int x_center = bounds.x / 2;
     int y_center = bounds.y / 2;
 
@@ -69,7 +69,7 @@ static void setup_multiplayer(struct board* b) {
      * set 2 paddles, and only horizontal boundaries.
      */
 
-    struct vector bounds = get_max_bounds(stdscr);
+    struct vector bounds = get_max_bounds();
     int x_center = bounds.x / 2;
     int y_center = bounds.y / 2;
 
@@ -115,12 +115,6 @@ struct board* board_init(bool is_multiplayer) {
     /*
      * constructor for board. initscr() must be called before calling this.
      */
-
-    if (stdscr == NULL) {
-        // curses TUI must be running
-        ERROR("board_init: No curses screen found.");
-        return NULL;
-    }
 
     struct board* b = malloc(sizeof *b);
 
@@ -206,83 +200,4 @@ int board_add_wall(struct board* b, struct wall w) {
     *next = w;
 
     return 0;
-}
-
-static chtype get_wall_char(struct wall* w) {
-    switch (w->style) {
-    case DASHED:
-        if (w->dir == HORIZONTAL) {
-            return '-';
-        } else {
-            return ':';
-        }
-    case SOLID:
-        if (w->dir == HORIZONTAL) {
-            return '_';
-        } else {
-            return '|';
-        }
-    default:
-        return ' ';
-    }
-}
-
-static void draw_wall(struct wall* w) {
-    if (w == NULL) {
-        return;
-    }
-
-    chtype chr = get_wall_char(w);
-
-    for (int i = 0; i < w->length; ++i) {
-        int x = w->pos.x;
-        int y = w->pos.y;
-
-        if (w->dir == HORIZONTAL) {
-            x += i;
-        } else {
-            y += i;
-        }
-
-        mvaddch(y, x, chr);
-    }
-}
-
-static void draw_walls(struct board* b) {
-    for (size_t i = 0; i < b->wall_count; i++) {
-        draw_wall(b->walls[i]);
-    }
-}
-
-static void draw_paddles(struct board* b) {
-    for (size_t i = 0; i < PONG_PLAYER_MAX; ++i) {
-        struct paddle* p = b->players[i];
-        
-        if (p == NULL) {
-            continue;
-        }
-
-        struct wall equiv = {
-            .pos      = p->pos,
-            .length   = p->height,
-            .tangible = true,
-            .dir      = VERTICAL,
-            .style    = SOLID
-        };
-
-        draw_wall(&equiv);
-    }
-}
-
-static void draw_ball(struct board* b) {
-    struct ball ball = b->ball;
-    mvaddch(ball.pos.y, ball.pos.x, ball.chr);
-}
-
-void board_update(struct board* b) {
-    clear();
-    draw_walls(b);
-    draw_paddles(b);
-    draw_ball(b);
-    refresh();
 }

@@ -31,7 +31,7 @@ extern "C" {
 void sanity_check(void);
 void setup_curses(void);
 
-struct vector get_max_bounds(WINDOW* win);
+struct vector get_max_bounds();
 void* find_first_null(void* ptr, size_t count);
 void* malloc_first_null(void* ptr, size_t count, size_t type_size);
 

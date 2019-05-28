@@ -27,8 +27,6 @@ void board_destroy(struct board* b);
 int board_add_player(struct board* b, struct vector pos);
 int board_add_wall(struct board* b, struct wall w);
 
-void board_update(struct board* b);
-
 #ifdef __cplusplus
 }
 #endif

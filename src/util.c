@@ -63,10 +63,19 @@ void setup_curses(void) {
     keypad(stdscr, TRUE);
 }
 
-struct vector get_max_bounds(WINDOW* win) {
+struct vector get_max_bounds() {
+    /*
+     * gets x and y bounds for the screen.
+     * if curses screen isn't found, returns {-1,-1}.
+     */
+
+    if (stdscr == NULL) {
+        return (struct vector) {-1, -1};
+    }
+
     int x;
     int y;
-    getmaxyx(win, y, x);
+    getmaxyx(stdscr, y, x);
 
     return (struct vector) { x, y };
 }
