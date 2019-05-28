@@ -14,8 +14,8 @@ struct board {
     struct paddle* players[BOARD_PLAYER_MAX];
     struct ball ball;
 
-    struct wall** walls;     // used as a dynamic array of pointers
-    unsigned int wall_count;
+    struct wall** walls;    // used as a dynamic array of pointers
+    size_t wall_count;
 };
 
 struct board* board_init(bool is_multiplayer);

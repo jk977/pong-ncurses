@@ -19,6 +19,10 @@ static void zero_pointers(void* ptr, size_t const count) {
 }
 
 static void setup_multiplayer(struct board* b) {
+    /*
+     * set 2 paddles, and only horizontal boundaries.
+     */
+
     struct vector bounds = get_max_bounds(stdscr);
     int x_center = bounds.x / 2;
     int y_center = bounds.y / 2;
@@ -26,7 +30,7 @@ static void setup_multiplayer(struct board* b) {
     board_add_player(b, (struct vector) {10, y_center - 1});
     board_add_player(b, (struct vector) {bounds.x - 10, y_center - 1});
 
-    // center line dividing the players' sides
+    // intangible center line dividing the players' sides
     board_add_wall(b, (struct wall) {
         .pos      = {x_center, BOARD_OUTER_BUFFER},
         .length   = bounds.y - 2*BOARD_OUTER_BUFFER,
@@ -55,6 +59,10 @@ static void setup_multiplayer(struct board* b) {
 }
 
 static void setup_singleplayer(struct board* b) {
+    /*
+     * only set 1 paddle, and have a wall covering the entire left side.
+     */
+
     struct vector bounds = get_max_bounds(stdscr);
     int y_center = bounds.y / 2;
 
@@ -89,6 +97,10 @@ static void setup_singleplayer(struct board* b) {
 }
 
 struct board* board_init(bool is_multiplayer) {
+    /*
+     * constructor for board. initscr() must be called before calling this.
+     */
+
     if (stdscr == NULL) {
         // curses TUI must be running
         ERROR("board_init: No curses screen found.");
@@ -125,6 +137,18 @@ struct board* board_init(bool is_multiplayer) {
 }
 
 void board_destroy(struct board* b) {
+    /*
+     * destructor for board.
+     */
+
+    for (size_t i = 0; i < BOARD_PLAYER_MAX; ++i) {
+        free(b->players[i]);
+    }
+
+    for (size_t i = 0; i < b->wall_count; ++i) {
+        free(b->walls[i]);
+    }
+
     free(b);
 }
 

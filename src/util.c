@@ -10,29 +10,6 @@
 #include "util.h"
 #include "config.h"
 
-void setup_curses(void) {
-    /*
-     * initializes and configures curses window.
-     */
-
-    setlocale(LC_ALL, "en_US.utf-8");
-    initscr();
-
-    if (has_colors()) {
-        start_color();
-        init_pair(PONG_COLOR_PAIR, PONG_FG, PONG_BG);
-        bkgd(COLOR_PAIR(PONG_COLOR_PAIR));
-    }
-
-    cbreak();       // game must have inputs immediately available
-    noecho();       // games shouldn't display inputs (in most cases)
-    curs_set(0);    // make cursor invisible when moving it around screen
-
-    scrollok(stdscr, FALSE);
-    intrflush(stdscr, FALSE);
-    keypad(stdscr, TRUE);
-}
-
 void sanity_check(void) {
     /*
      * make sure everything is ok before starting main program.
@@ -63,6 +40,29 @@ void sanity_check(void) {
     }
 }
 
+void setup_curses(void) {
+    /*
+     * initializes and configures curses window.
+     */
+
+    setlocale(LC_ALL, "en_US.utf-8");
+    initscr();
+
+    if (has_colors()) {
+        start_color();
+        init_pair(PONG_COLOR_PAIR, PONG_FG, PONG_BG);
+        bkgd(COLOR_PAIR(PONG_COLOR_PAIR));
+    }
+
+    cbreak();       // game must have inputs immediately available
+    noecho();       // games shouldn't display inputs (in most cases)
+    curs_set(0);    // make cursor invisible when moving it around screen
+
+    scrollok(stdscr, FALSE);
+    intrflush(stdscr, FALSE);
+    keypad(stdscr, TRUE);
+}
+
 struct vector get_max_bounds(WINDOW* win) {
     int x;
     int y;
@@ -75,11 +75,11 @@ void* find_first_null(void* ptr, size_t count) {
     /*
      * get first null pointer in array of pointers.
      *
-     * note: like with zero_pointers(), ptr must be an array
-     *       of pointers (void**).
+     * note: ptr must be an array of pointers (void**) or the function will
+     *       cause a segmentation fault.
      *
-     * returns the address of the first null pointer, or null if all pointers
-     * are nonnull.
+     * returns the address of the first null pointer (pointer to pointer),
+     * or null if all pointers are nonnull.
      */
 
     void** ary_ptrs = (void**) ptr;
