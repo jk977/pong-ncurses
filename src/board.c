@@ -27,7 +27,6 @@ static void setup_singleplayer(struct board* b) {
     int y_center = bounds.y / 2;
 
     b->ball = (struct ball) {
-        .chr = PONG_DEFAULT_BALL,
         .pos = {x_center, y_center},
         .velocity = {1, 1},
         .multiplier = 1
@@ -76,7 +75,6 @@ static void setup_multiplayer(struct board* b) {
     board_add_player(b, (struct vector) {bounds.x - 10, y_center - 1});
 
     b->ball = (struct ball) {
-        .chr = PONG_DEFAULT_BALL,
         .pos = {x_center, y_center},
         .velocity = {-1, 1},
         .multiplier = 1

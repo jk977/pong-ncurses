@@ -4,22 +4,29 @@
 #include "render.h"
 #include "config.h"
 
+#define BALL_CHAR        '*'
+#define WALL_CHAR_HDASH  '-'
+#define WALL_CHAR_HSOLID '_'
+#define WALL_CHAR_VDASH  ':'
+#define WALL_CHAR_VSOLID '|'
+#define WALL_CHAR_EMPTY  ' '
+
 static chtype get_wall_char(struct wall* w) {
     switch (w->style) {
     case DASHED:
         if (w->dir == HORIZONTAL) {
-            return '-';
+            return WALL_CHAR_HDASH;
         } else {
-            return ':';
+            return WALL_CHAR_VDASH;
         }
     case SOLID:
         if (w->dir == HORIZONTAL) {
-            return '_';
+            return WALL_CHAR_HSOLID;
         } else {
-            return '|';
+            return WALL_CHAR_VSOLID;
         }
     default:
-        return ' ';
+        return WALL_CHAR_EMPTY;
     }
 }
 
@@ -66,7 +73,7 @@ void render_ball(struct ball* ball) {
         return;
     }
 
-    mvaddch(ball->pos.y, ball->pos.x, ball->chr);
+    mvaddch(ball->pos.y, ball->pos.x, BALL_CHAR);
 }
 
 static void render_paddles(struct board* b) {
@@ -83,7 +90,7 @@ static void render_walls(struct board* b) {
 
 void render_board(struct board* b) {
     /*
-     * order of drawing is actually important here.
+     * order of drawing is important here.
      * ball is done last to ensure it's always on top.
      */
 

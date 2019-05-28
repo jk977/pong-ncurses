@@ -7,11 +7,6 @@
 extern "C" {
 #endif
 
-// default icons for game elements
-#define PONG_DEFAULT_BALL   '*'
-#define PONG_DEFAULT_WALL   '#'
-#define PONG_DEFAULT_PADDLE '|'
-
 // minimum window dimension requirements
 #define PONG_REQUIRED_X 50
 #define PONG_REQUIRED_Y 20
