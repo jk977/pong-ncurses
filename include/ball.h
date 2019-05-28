@@ -9,8 +9,6 @@ extern "C" {
 
 #include "vector.h"
 
-#define BALL_DEFAULT '*'
-
 struct ball {
     chtype        chr;          // character to use as ball
     struct vector pos;          // ball position

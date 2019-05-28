@@ -18,7 +18,8 @@ int main(void) {
     atexit(cleanup);
 
     struct board* b = board_init(true);
-    (void) b;
+    board_update(b);
+    getch();
 
     return 0;
 }

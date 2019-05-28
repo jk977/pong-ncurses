@@ -28,7 +28,7 @@ static void setup_singleplayer(struct board* b) {
     int y_center = bounds.y / 2;
 
     b->ball = (struct ball) {
-        .chr = BALL_DEFAULT,
+        .chr = PONG_DEFAULT_BALL,
         .pos = {x_center, y_center},
         .velocity = {1, 1},
         .multiplier = 1
@@ -38,8 +38,8 @@ static void setup_singleplayer(struct board* b) {
 
     // wall acting as perfect opponent
     board_add_wall(b, (struct wall) {
-        .pos      = {10, y_center - 1},
-        .length   = bounds.y - 2*BOARD_OUTER_BUFFER,
+        .pos      = {10, PONG_OUTER_BUFFER},
+        .length   = bounds.y - 2*PONG_OUTER_BUFFER,
         .tangible = false,
         .dir      = VERTICAL,
         .style    = SOLID
@@ -47,8 +47,8 @@ static void setup_singleplayer(struct board* b) {
 
     // upper playing field boundary
     board_add_wall(b, (struct wall) {
-        .pos      = {BOARD_OUTER_BUFFER, 0},
-        .length   = bounds.x - 2*BOARD_OUTER_BUFFER,
+        .pos      = {PONG_OUTER_BUFFER, PONG_OUTER_BUFFER},
+        .length   = bounds.x - 2*PONG_OUTER_BUFFER,
         .tangible = true,
         .dir      = HORIZONTAL,
         .style    = DASHED
@@ -56,8 +56,8 @@ static void setup_singleplayer(struct board* b) {
 
     // lower playing field boundary
     board_add_wall(b, (struct wall) {
-        .pos      = {BOARD_OUTER_BUFFER, bounds.y - BOARD_OUTER_BUFFER},
-        .length   = bounds.x - 2*BOARD_OUTER_BUFFER,
+        .pos      = {PONG_OUTER_BUFFER, bounds.y - PONG_OUTER_BUFFER},
+        .length   = bounds.x - 2*PONG_OUTER_BUFFER,
         .tangible = true,
         .dir      = HORIZONTAL,
         .style    = DASHED
@@ -77,7 +77,7 @@ static void setup_multiplayer(struct board* b) {
     board_add_player(b, (struct vector) {bounds.x - 10, y_center - 1});
 
     b->ball = (struct ball) {
-        .chr = BALL_DEFAULT,
+        .chr = PONG_DEFAULT_BALL,
         .pos = {x_center, y_center},
         .velocity = {-1, 1},
         .multiplier = 1
@@ -85,8 +85,8 @@ static void setup_multiplayer(struct board* b) {
 
     // intangible center line dividing the players' sides
     board_add_wall(b, (struct wall) {
-        .pos      = {x_center, BOARD_OUTER_BUFFER},
-        .length   = bounds.y - 2*BOARD_OUTER_BUFFER,
+        .pos      = {x_center, PONG_OUTER_BUFFER},
+        .length   = bounds.y - 2*PONG_OUTER_BUFFER,
         .tangible = false,
         .dir      = VERTICAL,
         .style    = DASHED
@@ -94,8 +94,8 @@ static void setup_multiplayer(struct board* b) {
 
     // upper playing field boundary
     board_add_wall(b, (struct wall) {
-        .pos      = {BOARD_OUTER_BUFFER, 0},
-        .length   = bounds.x - 2*BOARD_OUTER_BUFFER,
+        .pos      = {PONG_OUTER_BUFFER, PONG_OUTER_BUFFER},
+        .length   = bounds.x - 2*PONG_OUTER_BUFFER,
         .tangible = true,
         .dir      = HORIZONTAL,
         .style    = DASHED
@@ -103,8 +103,8 @@ static void setup_multiplayer(struct board* b) {
 
     // lower playing field boundary
     board_add_wall(b, (struct wall) {
-        .pos      = {BOARD_OUTER_BUFFER, bounds.y - BOARD_OUTER_BUFFER},
-        .length   = bounds.x - 2*BOARD_OUTER_BUFFER,
+        .pos      = {PONG_OUTER_BUFFER, bounds.y - PONG_OUTER_BUFFER},
+        .length   = bounds.x - 2*PONG_OUTER_BUFFER,
         .tangible = true,
         .dir      = HORIZONTAL,
         .style    = DASHED
@@ -139,7 +139,7 @@ struct board* board_init(bool is_multiplayer) {
     b->walls = ws;
     b->wall_count = wall_count;
 
-    zero_pointers(&b->players[0], BOARD_PLAYER_MAX);
+    zero_pointers(&b->players[0], PONG_PLAYER_MAX);
     zero_pointers(b->walls, wall_count);
 
     if (is_multiplayer) {
@@ -156,7 +156,7 @@ void board_destroy(struct board* b) {
      * destructor for board.
      */
 
-    for (size_t i = 0; i < BOARD_PLAYER_MAX; ++i) {
+    for (size_t i = 0; i < PONG_PLAYER_MAX; ++i) {
         free(b->players[i]);
     }
 
@@ -176,7 +176,7 @@ int board_add_player(struct board* b, struct vector pos) {
      * returns 0 on success, -1 otherwise.
      */
 
-    struct paddle* next = malloc_first_null(b->players, BOARD_PLAYER_MAX, sizeof *next);
+    struct paddle* next = malloc_first_null(b->players, PONG_PLAYER_MAX, sizeof *next);
 
     if (next == NULL) {
         // max number of players or failed to allocate memory
@@ -206,4 +206,83 @@ int board_add_wall(struct board* b, struct wall w) {
     *next = w;
 
     return 0;
+}
+
+static chtype get_wall_char(struct wall* w) {
+    switch (w->style) {
+    case DASHED:
+        if (w->dir == HORIZONTAL) {
+            return '-';
+        } else {
+            return ':';
+        }
+    case SOLID:
+        if (w->dir == HORIZONTAL) {
+            return '_';
+        } else {
+            return '|';
+        }
+    default:
+        return ' ';
+    }
+}
+
+static void draw_wall(struct wall* w) {
+    if (w == NULL) {
+        return;
+    }
+
+    chtype chr = get_wall_char(w);
+
+    for (int i = 0; i < w->length; ++i) {
+        int x = w->pos.x;
+        int y = w->pos.y;
+
+        if (w->dir == HORIZONTAL) {
+            x += i;
+        } else {
+            y += i;
+        }
+
+        mvaddch(y, x, chr);
+    }
+}
+
+static void draw_walls(struct board* b) {
+    for (size_t i = 0; i < b->wall_count; i++) {
+        draw_wall(b->walls[i]);
+    }
+}
+
+static void draw_paddles(struct board* b) {
+    for (size_t i = 0; i < PONG_PLAYER_MAX; ++i) {
+        struct paddle* p = b->players[i];
+        
+        if (p == NULL) {
+            continue;
+        }
+
+        struct wall equiv = {
+            .pos      = p->pos,
+            .length   = p->height,
+            .tangible = true,
+            .dir      = VERTICAL,
+            .style    = SOLID
+        };
+
+        draw_wall(&equiv);
+    }
+}
+
+static void draw_ball(struct board* b) {
+    struct ball ball = b->ball;
+    mvaddch(ball.pos.y, ball.pos.x, ball.chr);
+}
+
+void board_update(struct board* b) {
+    clear();
+    draw_walls(b);
+    draw_paddles(b);
+    draw_ball(b);
+    refresh();
 }

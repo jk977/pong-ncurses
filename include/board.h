@@ -11,11 +11,10 @@ extern "C" {
 #include "paddle.h"
 #include "wall.h"
 
-#define BOARD_PLAYER_MAX    2
-#define BOARD_OUTER_BUFFER  5 /* rows/cols */
+#include "config.h"
 
 struct board {
-    struct paddle* players[BOARD_PLAYER_MAX];
+    struct paddle* players[PONG_PLAYER_MAX];
     struct ball ball;
 
     struct wall** walls;    // used as a dynamic array of pointers
