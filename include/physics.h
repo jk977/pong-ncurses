@@ -13,7 +13,7 @@ enum collision {
     TB,     // collision on top/bottom face
     LR,     // collision on left/right face
     CORNER, // collision on both horizontal and vertical faces
-    NONE    // no collision
+    NO_COLLISION
 };
 
 // which player scored

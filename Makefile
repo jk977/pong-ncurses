@@ -11,7 +11,7 @@ ifdef STEP
 	CFLAGS += -DSTEP
 endif
 
-.PHONY: all buildpath tags clean proto
+.PHONY: all math pong buildpath tags clean proto
 
 
 ################
@@ -30,8 +30,12 @@ endif
 
 # creates dulite executable in $(BUILD_PATH)
 # ==========================================
-all: buildpath clean util.o board.o render.o physics.o src/main.c
+all: buildpath clean util.o math pong src/main.c
 	$(CC) $(CFLAGS) $(shell find "$(BUILD_PATH)"/src/ -name "*.o") src/main.c -o "$(BUILD_PATH)"/pong
+
+math: vector.o ratio.o line.o
+
+pong: board.o render.o physics.o
 
 # ensures proper build layout
 # ===========================
