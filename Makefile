@@ -33,7 +33,7 @@ endif
 all: buildpath clean util.o math pong src/main.c
 	$(CC) $(CFLAGS) $(shell find "$(BUILD_PATH)"/src/ -name "*.o") src/main.c -o "$(BUILD_PATH)"/pong
 
-math: vector.o ratio.o line.o
+math: ratio.o vector.o line.o intersection.o
 
 pong: board.o render.o physics.o
 
