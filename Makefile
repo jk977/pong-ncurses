@@ -35,7 +35,7 @@ all: buildpath clean util.o math pong src/main.c
 
 math: ratio.o vector.o line.o intersection.o
 
-pong: board.o render.o physics.o
+pong: wall.o board.o render.o physics.o
 
 # ensures proper build layout
 # ===========================

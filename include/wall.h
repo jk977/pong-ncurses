@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 #include "vector.h"
+#include "line.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,6 +21,8 @@ struct wall {
     enum direction dir;
     enum wallstyle style;
 };
+
+struct line wall_to_line(struct wall* w);
 
 #ifdef __cplusplus
 }
