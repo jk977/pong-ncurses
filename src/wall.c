@@ -14,4 +14,3 @@ struct line wall_to_line(struct wall* w) {
 
     return line_between(w->pos, wall_end);
 }
-

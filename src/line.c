@@ -16,14 +16,6 @@ struct line line_between(struct vector v1, struct vector v2) {
     }
 }
 
-bool line_is_vertical(struct line l) {
-    return l.end.x - l.start.x == 0;
-}
-
-bool line_is_horizontal(struct line l) {
-    return l.end.y - l.start.y == 0;
-}
-
 struct ratio line_slope(struct line l) {
     struct ratio slope = {
         l.end.y - l.start.y,

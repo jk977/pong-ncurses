@@ -33,9 +33,9 @@ endif
 all: buildpath clean util.o math pong src/main.c
 	$(CC) $(CFLAGS) $(shell find "$(BUILD_PATH)"/src/ -name "*.o") src/main.c -o "$(BUILD_PATH)"/pong
 
-math: ratio.o vector.o line.o intersection.o
+math: ratio.o vector.o line.o
 
-pong: wall.o board.o render.o physics.o
+pong: wall.o board.o render.o collision.o physics.o
 
 # ensures proper build layout
 # ===========================

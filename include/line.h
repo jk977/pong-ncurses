@@ -16,8 +16,6 @@ struct line {
 };
 
 struct line line_between(struct vector v1, struct vector v2);
-bool line_is_vertical(struct line l);
-bool line_is_horizontal(struct line l);
 struct ratio line_slope(struct line l);
 
 #ifdef __cplusplus

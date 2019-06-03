@@ -26,7 +26,7 @@ struct vector vector_multiply_ratio(struct vector v, struct ratio r) {
      * scalar multiplication of a vector by a rational number.
      *
      * the resulting vector is truncated if the vector would have a decimal
-     * component, and no checks for division by zero occur. don't divide by zero.
+     * component, and no checks for division by zero occur.
      */
 
     return (struct vector) { r.num * v.x / r.denom, r.num * v.y / r.denom };

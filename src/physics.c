@@ -1,27 +1,8 @@
 #include <stddef.h>
+#include <stdbool.h>
 
 #include "physics.h"
-#include "vector.h"
 #include "line.h"
-#include "intersection.h"
-
-enum collision get_collision(struct ball* ball, struct wall* w) {
-    struct vector next_coord = {
-        ball->pos.x + ball->velocity.x * ball->multiplier,
-        ball->pos.y + ball->velocity.y * ball->multiplier
-    };
-
-    struct line trajectory = line_between(ball->pos, next_coord);
-    struct line wall = wall_to_line(w);
-    struct intersection result = intersection_between(trajectory, wall);
-
-    if (!result.intersects) {
-        return NO_COLLISION;
-    }
-
-    // TODO finish this
-    return TB;
-}
 
 enum score_status get_score_status(struct board* b) {
     enum score_status status = NO_SCORE;
