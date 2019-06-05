@@ -2,9 +2,14 @@
 #include "config.h"
 #include "util.h"
 
-#include "physics/line.h"
-
 #include <stdlib.h>
+
+struct vector ball_project(struct ball* ball) {
+    return (struct vector) {
+        ball->pos.x + ball->velocity.x * ball->multiplier,
+        ball->pos.y + ball->velocity.y * ball->multiplier
+    };
+}
 
 struct line wall_to_line(struct wall* w) {
     struct vector wall_end = w->pos;

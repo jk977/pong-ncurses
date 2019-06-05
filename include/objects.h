@@ -47,6 +47,8 @@ struct board {
     size_t wall_count;
 };
 
+struct vector ball_project(struct ball* ball);
+
 struct line wall_to_line(struct wall* w);
 
 struct board* board_init(bool is_multiplayer);

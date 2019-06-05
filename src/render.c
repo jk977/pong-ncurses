@@ -83,7 +83,7 @@ static void render_paddles(struct board* b) {
 }
 
 static void render_walls(struct board* b) {
-    for (size_t i = 0; i < b->wall_count; i++) {
+    for (size_t i = 0; i < b->wall_count; ++i) {
         render_wall(b->walls[i]);
     }
 }
@@ -94,6 +94,7 @@ void render_board(struct board* b) {
      * ball is done last to ensure it's always on top.
      */
 
+    clear();
     render_walls(b);
     render_paddles(b);
     render_ball(&b->ball);

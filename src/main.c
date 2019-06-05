@@ -8,6 +8,8 @@
 
 #include "objects.h"
 #include "render.h"
+#include "update.h"
+
 #include "config.h"
 #include "util.h"
 
@@ -78,9 +80,13 @@ int main(void) {
     atexit(cleanup);
 
     struct board* b = board_init(true);
-    render_board(b);
-    refresh();
-    getch();
+
+    while (true) {
+        update_board(b);
+        render_board(b);
+        refresh();
+        getch();
+    }
 
     return 0;
 }

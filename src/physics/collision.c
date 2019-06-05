@@ -124,7 +124,7 @@ static inline struct intersection intersection_between(struct line l1, struct li
     return result;
 }
 
-struct collision get_collision(struct ball* ball, struct wall* w) {
+struct collision collision_between(struct ball* ball, struct wall* w) {
     /*
      * find point and type of collision between ball's projected
      * position after the next update and the specified wall.
@@ -136,16 +136,16 @@ struct collision get_collision(struct ball* ball, struct wall* w) {
         return no_collision;
     }
 
-    struct vector next_coord = {
-        ball->pos.x + ball->velocity.x * ball->multiplier,
-        ball->pos.y + ball->velocity.y * ball->multiplier
-    };
+    struct vector next_coord = ball_project(ball);
+    struct line trajectory   = line_between(ball->pos, next_coord);
+    struct line wall         = wall_to_line(w);
+    struct intersection i    = intersection_between(trajectory, wall);
 
-    struct line trajectory = line_between(ball->pos, next_coord);
-    struct line wall       = wall_to_line(w);
-    struct intersection i  = intersection_between(trajectory, wall);
-
-    if (!i.intersects) {
+    if (!i.intersects || vector_equals(i.point, ball->pos)) {
+        // in addition to not colliding if the projection doesn't intersect,
+        // no collision is counted if the point of collision is the ball's
+        // current position. this prevents the ball from zigzagging into a
+        // wall without bouncing away.
         return no_collision;
     }
 
@@ -153,10 +153,10 @@ struct collision get_collision(struct ball* ball, struct wall* w) {
 
     switch (w->dir) {
     case HORIZONTAL:
-        result.type |= COLLISION_TB;
+        result.type = COLLISION_TB;
         break;
     case VERTICAL:
-        result.type |= COLLISION_LR;
+        result.type = COLLISION_LR;
         break;
     }
 
