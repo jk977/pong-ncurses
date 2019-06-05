@@ -150,18 +150,36 @@ struct collision collision_between(struct ball* ball, struct wall* w) {
     }
 
     struct collision result = { COLLISION_NONE, i.point };
+    bool at_corner;
 
     switch (w->dir) {
     case HORIZONTAL:
-        result.type = COLLISION_TB;
+        // corner collisions occur if the ball collides with the corner and
+        // approaches from the same side as the corner. 
+        at_corner = (vector_equals(i.point, wall.start) && i.point.x > ball->pos.x)
+            || (vector_equals(i.point, wall.end) && i.point.x < ball->pos.x);
+
+        if (at_corner) {
+            result.type = COLLISION_CORNER;
+        } else {
+            result.type = COLLISION_TB;
+        }
+
         break;
+
     case VERTICAL:
-        result.type = COLLISION_LR;
+        // same logic as the horizontal corner, but using y-coordinates
+        at_corner = (vector_equals(i.point, wall.start) && i.point.y > ball->pos.y)
+            || (vector_equals(i.point, wall.end) && i.point.y < ball->pos.y);
+
+        if (at_corner) {
+            result.type = COLLISION_CORNER;
+        } else {
+            result.type = COLLISION_LR;
+        }
+
         break;
     }
 
-    // TODO handle corner collisions
-
     return result;
 }
-
