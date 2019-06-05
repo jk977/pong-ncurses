@@ -6,7 +6,7 @@
 
 #include <sys/ioctl.h>
 
-#include "objects/board.h"
+#include "objects.h"
 #include "render.h"
 #include "config.h"
 #include "util.h"

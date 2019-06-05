@@ -2,8 +2,8 @@
 #define COLLISION_H_
 
 #include "physics/vector.h"
-#include "objects/ball.h"
-#include "objects/wall.h"
+#include "objects.h"
+#include "objects.h"
 
 #ifdef __cplusplus
 extern "C" {

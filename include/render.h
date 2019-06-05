@@ -1,10 +1,10 @@
 #ifndef RENDER_H_
 #define RENDER_H_
 
-#include "objects/ball.h"
-#include "objects/board.h"
-#include "objects/paddle.h"
-#include "objects/wall.h"
+#include "objects.h"
+#include "objects.h"
+#include "objects.h"
+#include "objects.h"
 
 #ifdef __cplusplus
 extern "C" {
