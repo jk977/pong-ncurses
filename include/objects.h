@@ -16,10 +16,6 @@
 extern "C" {
 #endif
 
-// enums for wall struct
-enum w_direction { HORIZONTAL, VERTICAL };
-enum w_style { INVISIBLE, DASHED, SOLID };
-
 struct ball {
     struct vector pos;          // ball position
     struct vector velocity;
@@ -36,8 +32,11 @@ struct wall {
     int length;
     bool tangible;
 
-    enum w_direction dir;
-    enum w_style style;
+    enum { HORIZONTAL, VERTICAL }
+    dir;
+
+    enum { INVISIBLE, DASHED, SOLID }
+    style;
 };
 
 struct board {
