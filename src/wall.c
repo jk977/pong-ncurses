@@ -1,4 +1,4 @@
-#include "wall.h"
+#include "objects/wall.h"
 
 struct line wall_to_line(struct wall* w) {
     struct vector wall_end = w->pos;

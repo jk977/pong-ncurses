@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-#include "vector.h"
+#include "physics/vector.h"
 
 #ifdef __cplusplus
 extern "C" {

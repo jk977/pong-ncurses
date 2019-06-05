@@ -1,9 +1,9 @@
 #ifndef COLLISION_H_
 #define COLLISION_H_
 
-#include "vector.h"
-#include "ball.h"
-#include "wall.h"
+#include "physics/vector.h"
+#include "objects/ball.h"
+#include "objects/wall.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,4 +1,4 @@
-#include "vector.h"
+#include "physics/vector.h"
 
 bool vector_equals(struct vector v1, struct vector v2) {
     return v1.x == v2.x

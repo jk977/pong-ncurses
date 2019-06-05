@@ -1,6 +1,6 @@
-#include "collision.h"
-#include "line.h"
-#include "ratio.h"
+#include "physics/collision.h"
+#include "physics/line.h"
+#include "physics/ratio.h"
 
 #include <assert.h>
 #include <stdbool.h>
@@ -151,7 +151,7 @@ struct collision get_collision(struct ball* ball, struct wall* w) {
 
     struct collision result = { COLLISION_NONE, i.point };
 
-    switch (w->type) {
+    switch (w->dir) {
     case HORIZONTAL:
         result.type |= COLLISION_TB;
         break;

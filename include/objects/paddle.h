@@ -1,7 +1,7 @@
 #ifndef PADDLE_H_
 #define PADDLE_H_
 
-#include "vector.h"
+#include "physics/vector.h"
 
 #ifdef __cplusplus
 extern "C" {

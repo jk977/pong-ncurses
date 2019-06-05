@@ -3,8 +3,8 @@
 
 #include <stdbool.h>
 
-#include "vector.h"
-#include "line.h"
+#include "physics/vector.h"
+#include "physics/line.h"
 
 #ifdef __cplusplus
 extern "C" {

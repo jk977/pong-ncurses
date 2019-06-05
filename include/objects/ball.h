@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#include "vector.h"
+#include "physics/vector.h"
 
 struct ball {
     struct vector pos;          // ball position

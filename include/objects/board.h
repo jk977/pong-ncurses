@@ -7,9 +7,9 @@ extern "C" {
 
 #include <stdbool.h>
 
-#include "ball.h"
-#include "paddle.h"
-#include "wall.h"
+#include "objects/ball.h"
+#include "objects/paddle.h"
+#include "objects/wall.h"
 
 #include "config.h"
 

@@ -1,8 +1,8 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#include "physics.h"
-#include "line.h"
+#include "physics/physics.h"
+#include "physics/line.h"
 
 enum score_status get_score_status(struct board* b) {
     enum score_status status = NO_SCORE;

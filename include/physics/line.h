@@ -3,8 +3,8 @@
 
 #include <stdbool.h>
 
-#include "vector.h"
-#include "ratio.h"
+#include "physics/vector.h"
+#include "physics/ratio.h"
 
 #ifdef __cplusplus
 extern "C" {

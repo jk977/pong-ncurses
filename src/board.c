@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "board.h"
+#include "objects/board.h"
 #include "config.h"
 #include "util.h"
 
