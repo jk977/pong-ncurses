@@ -22,7 +22,7 @@ extern "C" {
 
 // misc settings
 #define PONG_REFRESH_RATE   30 /* Hz */
-#define PONG_PADDLE_HEIGHT  3  /* rows */
+#define PONG_PADDLE_HEIGHT  4  /* rows */
 #define PONG_PLAYER_MAX     2
 #define PONG_OUTER_BUFFER   5 /* rows/cols */
 

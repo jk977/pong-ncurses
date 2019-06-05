@@ -72,7 +72,7 @@ static void setup_singleplayer(struct board* b) {
         .multiplier = 1
     };
 
-    board_add_player(b, (struct vector) {bounds.x - 10, y_center - 1});
+    board_add_player(b, (struct vector) {bounds.x - 10, y_center});
 
     // wall acting as perfect opponent
     board_add_wall(b, (struct wall) {
@@ -111,8 +111,8 @@ static void setup_multiplayer(struct board* b) {
     int x_center = bounds.x / 2;
     int y_center = bounds.y / 2;
 
-    board_add_player(b, (struct vector) {10, y_center - 1});
-    board_add_player(b, (struct vector) {bounds.x - 10, y_center - 1});
+    board_add_player(b, (struct vector) {10, y_center});
+    board_add_player(b, (struct vector) {bounds.x - 10, y_center});
 
     b->ball = (struct ball) {
         .pos = {x_center, y_center},
@@ -213,6 +213,9 @@ int board_add_player(struct board* b, struct vector pos) {
         // max number of players or failed to allocate memory
         return -1;
     }
+
+    // vertically center paddle around given position
+    pos.y -= PONG_PADDLE_HEIGHT / 2;
 
     *next = (struct paddle) {
         .height = PONG_PADDLE_HEIGHT,
