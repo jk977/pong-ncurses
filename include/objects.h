@@ -49,6 +49,8 @@ struct board {
 
 struct vector ball_project(struct ball* ball);
 
+struct wall paddle_to_wall(struct paddle* p);
+
 struct line wall_to_line(struct wall* w);
 
 struct board* board_init(bool is_multiplayer);

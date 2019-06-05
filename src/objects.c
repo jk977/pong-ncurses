@@ -15,6 +15,16 @@ struct vector ball_project(struct ball* ball) {
     };
 }
 
+struct wall paddle_to_wall(struct paddle* p) {
+    return (struct wall) {
+        .pos      = p->pos,
+        .length   = p->height,
+        .tangible = true,
+        .dir      = VERTICAL,
+        .style    = SOLID
+    };
+}
+
 struct line wall_to_line(struct wall* w) {
     /*
      * get line equivalent of specified wall.
@@ -24,10 +34,10 @@ struct line wall_to_line(struct wall* w) {
 
     switch (w->dir) {
     case HORIZONTAL:
-        wall_end.x += w->length;
+        wall_end.x += w->length - 1;
         break;
     case VERTICAL:
-        wall_end.y += w->length;
+        wall_end.y += w->length - 1;
         break;
     }
 

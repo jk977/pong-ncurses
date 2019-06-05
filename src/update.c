@@ -15,18 +15,28 @@ void update_board(struct board* b) {
 
     struct vector projected_pos = ball_project(&b->ball);
     struct collision coll = { COLLISION_NONE, {0,0} };
-    size_t i = 0;
 
     // iterate through each wall and stop if a collision is found
-    while (i < b->wall_count && coll.type == COLLISION_NONE) {
+    for (size_t i = 0; i < b->wall_count && coll.type == COLLISION_NONE; ++i) {
         struct wall* w = b->walls[i];
-        ++i;
 
         if (w == NULL) {
             continue;
         }
 
         coll = collision_between(&b->ball, w);
+    }
+
+    // do the same for each paddle
+    for (size_t i = 0; i < PONG_PLAYER_MAX && coll.type == COLLISION_NONE; ++i) {
+        struct paddle* p = b->players[i];
+
+        if (p == NULL) {
+            continue;
+        }
+
+        struct wall equiv = paddle_to_wall(p);
+        coll = collision_between(&b->ball, &equiv);
     }
 
     struct vector actual_pos = projected_pos;
@@ -36,18 +46,15 @@ void update_board(struct board* b) {
 
     switch (coll.type) {
     case COLLISION_NONE:
-        actual_pos = projected_pos;
         break;
 
     case COLLISION_TB:
         b->ball.velocity.y *= -1;
         actual_pos.x = coll.point.x + x_delta;
-        actual_pos.y = projected_pos.y;
         break;
 
     case COLLISION_LR:
         b->ball.velocity.x *= -1;
-        actual_pos.x = projected_pos.x;
         actual_pos.y = coll.point.y + y_delta;
         break;
 

@@ -56,15 +56,7 @@ void render_paddle(struct paddle* p) {
         return;
     }
 
-    // treat paddles as a special type of wall
-    struct wall equiv = {
-        .pos      = p->pos,
-        .length   = p->height,
-        .tangible = true,
-        .dir      = VERTICAL,
-        .style    = SOLID
-    };
-
+    struct wall equiv = paddle_to_wall(p);
     render_wall(&equiv);
 }
 
