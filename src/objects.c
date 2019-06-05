@@ -68,7 +68,7 @@ static void setup_singleplayer(struct board* b) {
     board_add_wall(b, (struct wall) {
         .pos      = {10, PONG_OUTER_BUFFER},
         .length   = bounds.y - 2*PONG_OUTER_BUFFER,
-        .tangible = false,
+        .tangible = true,
         .dir      = VERTICAL,
         .style    = SOLID
     });
