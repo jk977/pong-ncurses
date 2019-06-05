@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include <curses.h>
 #include <locale.h>
@@ -12,6 +13,8 @@
 
 #include "config.h"
 #include "util.h"
+
+static struct board* main_board = NULL;
 
 void sanity_check(void) {
     /*
@@ -72,6 +75,7 @@ void cleanup(void) {
      */
 
     endwin();
+    board_destroy(main_board);
 }
 
 int main(void) {
@@ -79,11 +83,11 @@ int main(void) {
     setup_curses();
     atexit(cleanup);
 
-    struct board* b = board_init(true);
+    main_board = board_init(true);
 
     while (true) {
-        update_board(b);
-        render_board(b);
+        update_board(main_board);
+        render_board(main_board);
         refresh();
         getch();
     }
