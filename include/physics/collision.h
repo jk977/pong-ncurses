@@ -1,3 +1,7 @@
+/*
+ * collision.h: Interface for collision detection between game objects.
+ */
+
 #ifndef COLLISION_H_
 #define COLLISION_H_
 

@@ -1,3 +1,7 @@
+/*
+ * update.h: Interface for updating state of game.
+ */
+
 #ifndef UPDATE_H_
 #define UPDATE_H_
 

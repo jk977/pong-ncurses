@@ -5,6 +5,10 @@
 #include <stdlib.h>
 
 struct vector ball_project(struct ball* ball) {
+    /*
+     * get where the ball would be next tick without any collisions.
+     */
+
     return (struct vector) {
         ball->pos.x + ball->velocity.x * ball->multiplier,
         ball->pos.y + ball->velocity.y * ball->multiplier
@@ -12,6 +16,10 @@ struct vector ball_project(struct ball* ball) {
 }
 
 struct line wall_to_line(struct wall* w) {
+    /*
+     * get line equivalent of specified wall.
+     */
+
     struct vector wall_end = w->pos;
 
     switch (w->dir) {

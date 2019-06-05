@@ -1,3 +1,7 @@
+/*
+ * ratio.h: Ratio of two whole numbers used in physics calculations.
+ */
+
 #ifndef RATIO_H_
 #define RATIO_H_
 

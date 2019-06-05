@@ -33,5 +33,10 @@ struct vector vector_multiply_ratio(struct vector v, struct ratio r) {
 }
 
 distance_t vector_cross(struct vector v1, struct vector v2) {
+    /*
+     * 2D cross product of vectors. mathematically, this returns the
+     * determinant of the 2x2 matrix formed by using v1 and v2 as row vectors.
+     */
+
     return v1.x * v2.y - v1.y * v2.x;
 }

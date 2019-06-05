@@ -1,3 +1,7 @@
+/*
+ * render.h: Interface for rendering game objects.
+ */
+
 #ifndef RENDER_H_
 #define RENDER_H_
 

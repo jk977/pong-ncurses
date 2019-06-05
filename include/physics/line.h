@@ -1,3 +1,7 @@
+/*
+ * line.h: Definition and functions for line segment used in physics calculations.
+ */
+
 #ifndef LINE_H_
 #define LINE_H_
 

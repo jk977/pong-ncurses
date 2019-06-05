@@ -1,3 +1,7 @@
+/*
+ * vector.h: Structure used both for mathematical vectors and points in space.
+ */
+
 #ifndef VECTOR_H_
 #define VECTOR_H_
 
