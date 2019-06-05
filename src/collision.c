@@ -149,8 +149,19 @@ struct collision get_collision(struct ball* ball, struct wall* w) {
         return no_collision;
     }
 
-    // TODO finish this
     struct collision result = { COLLISION_NONE, i.point };
+
+    switch (w->type) {
+    case HORIZONTAL:
+        result.type |= COLLISION_TB;
+        break;
+    case VERTICAL:
+        result.type |= COLLISION_LR;
+        break;
+    }
+
+    // TODO handle corner collisions
+
     return result;
 }
 
