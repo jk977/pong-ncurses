@@ -11,7 +11,7 @@ ifdef STEP
 	CFLAGS += -DSTEP
 endif
 
-.PHONY: all math pong buildpath tags clean proto
+.PHONY: all physics pong buildpath tags clean proto
 
 
 ################
@@ -23,19 +23,21 @@ endif
 %.o: src/%.c
 	$(CC) $(CFLAGS) $< -c -o "$(BUILD_PATH)"/src/$@
 
+physics/%.o: src/physics/%.c
+	$(CC) $(CFLAGS) $< -c -o "$(BUILD_PATH)"/src/$(notdir $@)
 
 ###############
 # main target #
 ###############
 
-# creates dulite executable in $(BUILD_PATH)
-# ==========================================
-all: buildpath clean util.o math pong src/main.c
+# creates pong executable in $(BUILD_PATH)
+# ========================================
+all: buildpath clean util.o pong physics src/main.c
 	$(CC) $(CFLAGS) $(shell find "$(BUILD_PATH)"/src/ -name "*.o") src/main.c -o "$(BUILD_PATH)"/pong
 
-math: ratio.o vector.o line.o
+physics: physics/collision.o physics/line.o physics/physics.o physics/ratio.o physics/vector.o
 
-pong: objects.o render.o collision.o physics.o
+pong: objects.o render.o
 
 # ensures proper build layout
 # ===========================

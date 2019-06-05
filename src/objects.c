@@ -2,6 +2,8 @@
 #include "config.h"
 #include "util.h"
 
+#include "physics/line.h"
+
 #include <stdlib.h>
 
 struct line wall_to_line(struct wall* w) {
