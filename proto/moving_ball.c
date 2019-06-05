@@ -11,7 +11,7 @@
 #include <curses.h>
 #include <unistd.h>
 
-#include "ball.h"
+#include "objects.h"
 #include "config.h"
 #include "util.h"
 
