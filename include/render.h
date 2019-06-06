@@ -6,9 +6,7 @@
 #define RENDER_H_
 
 #include "objects.h"
-#include "objects.h"
-#include "objects.h"
-#include "objects.h"
+#include "board.h"
 
 #ifdef __cplusplus
 extern "C" {

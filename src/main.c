@@ -1,3 +1,5 @@
+#define _DEFAULT_SOURCE
+
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -7,14 +9,15 @@
 
 #include <sys/ioctl.h>
 
-#include "objects.h"
+#include "board.h"
 #include "render.h"
 #include "update.h"
 
 #include "config.h"
 #include "util.h"
 
-static struct board* main_board = NULL;
+unsigned int PONG_REFRESH_RATE = 25;
+struct board* main_board = NULL;
 
 void sanity_check(void) {
     /*
@@ -78,6 +81,22 @@ void cleanup(void) {
     board_destroy(main_board);
 }
 
+useconds_t period_from_freq(unsigned int hz) {
+    /*
+     * convert hertz to a period, in microseconds
+     *
+     * note: math is based on the relation f=1/T, where the frequency f is in Hz
+     *       and the period T is in seconds.
+     */
+
+    int const usec_per_sec = 1000000;
+    return 1.0/hz * usec_per_sec;
+}
+
+void handle_input(struct board* b) {
+    (void) b;
+}
+
 int main(void) {
     sanity_check();
     setup_curses();
@@ -85,11 +104,14 @@ int main(void) {
 
     main_board = board_init(true);
 
+    useconds_t const sleep_length = period_from_freq(PONG_REFRESH_RATE);
+
     while (true) {
+        handle_input(main_board);
         update_board(main_board);
         render_board(main_board);
         refresh();
-        getch();
+        usleep(sleep_length);
     }
 
     return 0;

@@ -39,25 +39,9 @@ struct wall {
     style;
 };
 
-struct board {
-    struct paddle* players[PONG_PLAYER_MAX];
-    struct ball ball;
-
-    struct wall** walls;    // used as a dynamic array of pointers
-    size_t wall_count;
-};
-
 struct vector ball_project(struct ball* ball);
-
 struct wall paddle_to_wall(struct paddle* p);
-
 struct line wall_to_line(struct wall* w);
-
-struct board* board_init(bool is_multiplayer);
-void board_destroy(struct board* b);
-
-int board_add_player(struct board* b, struct vector pos);
-int board_add_wall(struct board* b, struct wall w);
 
 #ifdef __cplusplus
 }

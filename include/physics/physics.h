@@ -1,7 +1,7 @@
 #ifndef PHYSICS_H_
 #define PHYSICS_H_
 
-#include "objects.h"
+#include "board.h"
 
 #ifdef __cplusplus
 extern "C" {

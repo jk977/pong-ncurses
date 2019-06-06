@@ -1,5 +1,5 @@
 /*
- * config.h: Compile-time configuration for various game settings.
+ * config.h: Compile-time and runtime configuration for various game settings.
  */
 
 #ifndef CONFIG_H_
@@ -21,10 +21,12 @@ extern "C" {
 #define PONG_MAIN_FG    COLOR_WHITE
 
 // misc settings
-#define PONG_REFRESH_RATE   30 /* Hz */
-#define PONG_PADDLE_HEIGHT  4  /* rows */
-#define PONG_PLAYER_MAX     2
-#define PONG_OUTER_BUFFER   5 /* rows/cols */
+#define PONG_PADDLE_HEIGHT 4  /* rows */
+#define PONG_PLAYER_MAX    2
+#define PONG_OUTER_BUFFER  5  /* rows/cols */
+
+// runtime settings
+extern unsigned int PONG_REFRESH_RATE; /* Hz */
 
 #ifdef __cplusplus
 }

@@ -5,7 +5,7 @@
 #ifndef UPDATE_H_
 #define UPDATE_H_
 
-#include "objects.h"
+#include "board.h"
 
 void update_board(struct board* b);
 
