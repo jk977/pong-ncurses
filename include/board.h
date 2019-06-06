@@ -13,6 +13,10 @@ struct board {
     struct paddle* players[PONG_PLAYER_MAX];
     struct ball ball;
 
+    // scores can be negative to disable
+    int p1_score;
+    int p2_score;
+
     struct wall** walls; // used as a dynamic array of pointers
     size_t wall_count;
 };

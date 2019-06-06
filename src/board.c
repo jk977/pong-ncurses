@@ -35,6 +35,9 @@ static void setup_singleplayer(struct board* b) {
 
     board_add_player(b, (struct vector) {bounds.x - 10, y_center});
 
+    b->p1_score = 0;
+    b->p2_score = -1;
+
     // wall acting as perfect opponent
     board_add_wall(b, (struct wall) {
         .pos      = {10, PONG_OUTER_BUFFER},
@@ -80,6 +83,9 @@ static void setup_multiplayer(struct board* b) {
         .velocity = {-1, 1},
         .multiplier = 1
     };
+
+    b->p1_score = 0;
+    b->p2_score = 0;
 
     // intangible center line dividing the players' sides
     board_add_wall(b, (struct wall) {

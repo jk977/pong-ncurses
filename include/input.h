@@ -1,3 +1,7 @@
+/*
+ * input.h: Input handler for game.
+ */
+
 #ifndef INPUT_H_
 #define INPUT_H_
 
