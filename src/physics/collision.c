@@ -10,6 +10,38 @@ struct collision collision_between(struct ball* ball, struct wall* w) {
      * position after the next update and the specified wall.
      */
 
+    /*
+     * TODO classify passing "through" inverted corner as collision.
+     *
+     * i.e., start with:
+     *
+     *              |
+     *              |  (ball heading down-left)
+     *              |*
+     *              ---------
+     *
+     * then,
+     *
+     *              |
+     *              |  (ball continuing same path)
+     *              |
+     *              *--------
+     *
+     * on the next frame, do this
+     *
+     *              |
+     *              |  (ball bouncing out of corner, new direction is up-right)
+     *              |*
+     *              ---------
+     *
+     * instead of this
+     *
+     *              |
+     *              |  (ball passes through wall)
+     *             *|
+     *              ---------
+     */
+
     struct collision const no_collision = { COLLISION_NONE, {0,0} };
 
     if (!w->tangible) {
