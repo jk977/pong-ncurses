@@ -202,3 +202,54 @@ int board_add_wall(struct board* b, struct wall w) {
 
     return 0;
 }
+
+static bool paddle_can_move(struct board* b, struct paddle* p, int y) {
+    /*
+     * checks if paddle can move <y> units vertically.
+     */
+
+    struct vector start = p->pos;
+
+    if (y > 0) {
+        // use bottom of paddle as start of ray since it's moving downward
+        start.y += p->height - 1;
+    }
+
+    struct vector end           = {start.x, start.y + y};
+    struct line path            = line_between(start, end);
+    struct intersection current = { .intersects = false, .point = {0,0} };
+
+    // iterate through walls until an intersection is found
+    for (size_t i = 0; i < b->wall_count && !current.intersects; ++i) {
+        struct wall* w = b->walls[i];
+
+        if (w == NULL || !w->tangible) {
+            continue;
+        }
+
+        current = intersection_between(path, wall_to_line(w));
+    }
+
+    return !current.intersects;
+}
+
+int board_move_paddle(struct board* b, unsigned int player, int y) {
+    /*
+     * moves paddle <y> units vertically, unless the paddle is unable to move.
+     * y < 0 indicates upward movement, and y > 0 gives downward movement
+     * returns 0 on successful move, -1 otherwise.
+     */
+
+    if (player > 1) {
+        return -1;
+    }
+
+    struct paddle* p = b->players[player];
+
+    if (p == NULL || !paddle_can_move(b, p, y)) {
+        return -1;
+    }
+
+    p->pos.y += y;
+    return 0;
+}

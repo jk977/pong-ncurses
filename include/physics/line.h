@@ -19,8 +19,15 @@ struct line {
     struct vector end;
 };
 
+struct intersection {
+    bool intersects;     // whether or not there's an intersection
+    struct vector point; // the point of intersection, if any
+};
+
 struct line line_between(struct vector v1, struct vector v2);
 struct ratio line_slope(struct line l);
+
+struct intersection intersection_between(struct line l1, struct line l2);
 
 #ifdef __cplusplus
 }

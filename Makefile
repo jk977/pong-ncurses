@@ -32,7 +32,7 @@ physics/%.o: src/physics/%.c
 
 # creates pong executable in $(BUILD_PATH)
 # ========================================
-all: buildpath clean util.o pong physics src/main.c
+all: buildpath clean util.o pong physics input.o src/main.c
 	$(CC) $(CFLAGS) $(shell find "$(BUILD_PATH)"/src/ -name "*.o") src/main.c -o "$(BUILD_PATH)"/pong
 
 physics: physics/collision.o physics/line.o physics/physics.o physics/ratio.o physics/vector.o

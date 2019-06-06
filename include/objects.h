@@ -23,12 +23,12 @@ struct ball {
 };
 
 struct paddle {
-    struct vector pos;
+    struct vector pos; // top of paddle
     int height;
 };
 
 struct wall {
-    struct vector pos;
+    struct vector pos; // top (or left, if horizontal) of wall
     int length;
     bool tangible;
 

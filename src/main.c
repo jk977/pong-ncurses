@@ -10,8 +10,10 @@
 #include <sys/ioctl.h>
 
 #include "board.h"
+
 #include "render.h"
 #include "update.h"
+#include "input.h"
 
 #include "config.h"
 #include "util.h"
@@ -67,6 +69,7 @@ void setup_curses(void) {
     noecho();       // games shouldn't display inputs (in most cases)
     curs_set(0);    // make cursor invisible when moving it around screen
 
+    nodelay(stdscr, TRUE);    // don't block on getch()
     scrollok(stdscr, FALSE);
     intrflush(stdscr, FALSE);
     keypad(stdscr, TRUE);
@@ -91,10 +94,6 @@ useconds_t period_from_freq(unsigned int hz) {
 
     int const usec_per_sec = 1000000;
     return 1.0/hz * usec_per_sec;
-}
-
-void handle_input(struct board* b) {
-    (void) b;
 }
 
 int main(void) {
