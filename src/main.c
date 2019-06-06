@@ -18,7 +18,7 @@
 #include "config.h"
 #include "util.h"
 
-unsigned int PONG_REFRESH_RATE = 25;
+unsigned int PONG_REFRESH_RATE = 15;
 struct board* main_board = NULL;
 
 void sanity_check(void) {
@@ -101,7 +101,7 @@ int main(void) {
     setup_curses();
     atexit(cleanup);
 
-    main_board = board_init(true);
+    main_board = board_init(false);
 
     useconds_t const sleep_length = period_from_freq(PONG_REFRESH_RATE);
 

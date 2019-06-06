@@ -38,7 +38,7 @@ static void setup_singleplayer(struct board* b) {
     // wall acting as perfect opponent
     board_add_wall(b, (struct wall) {
         .pos      = {10, PONG_OUTER_BUFFER},
-        .length   = bounds.y - 2*PONG_OUTER_BUFFER,
+        .length   = bounds.y - 2*PONG_OUTER_BUFFER + 1,
         .tangible = true,
         .dir      = VERTICAL,
         .style    = SOLID
@@ -212,7 +212,12 @@ static bool paddle_can_move(struct board* b, struct paddle* p, int y) {
 
     if (y > 0) {
         // use bottom of paddle as start of ray since it's moving downward
-        start.y += p->height - 1;
+        // p->height - 1 gets the edge of the paddle, and subtracting an
+        // additional 1 allows the edges to overlap with walls so the ball
+        // doesn't go through the paddle
+        start.y += p->height - 2;
+    } else {
+        ++start.y;
     }
 
     struct vector end           = {start.x, start.y + y};
