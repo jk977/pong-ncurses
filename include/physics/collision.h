@@ -12,11 +12,16 @@
 extern "C" {
 #endif
 
-struct collision {
-    // no collision, top/bottom collision, left/right, or corner collision
-    enum { COLLISION_NONE, COLLISION_TB, COLLISION_LR, COLLISION_CORNER }
-    type;
+// bitfields for types of collisions
+#define COLLISION_NONE      0
+#define COLLISION_TB        (1 << 0) /* top/bottom face collision */
+#define COLLISION_LR        (1 << 1) /* left/right face collision */
+#define COLLISION_CORNER    (COLLISION_TB | COLLISION_LR)
 
+typedef unsigned char coltype_t;
+
+struct collision {
+    coltype_t type;
     struct vector point; // point of collision
 };
 

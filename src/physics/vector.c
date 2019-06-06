@@ -1,5 +1,7 @@
 #include "physics/vector.h"
 
+#include <math.h>
+
 bool vector_equals(struct vector v1, struct vector v2) {
     return v1.x == v2.x
         && v1.y == v2.y;

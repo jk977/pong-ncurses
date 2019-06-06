@@ -101,7 +101,7 @@ int main(void) {
     setup_curses();
     atexit(cleanup);
 
-    main_board = board_init(false);
+    main_board = board_init(true);
 
     useconds_t const sleep_length = period_from_freq(PONG_REFRESH_RATE);
 
