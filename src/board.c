@@ -4,6 +4,7 @@
 #include "util.h"
 
 #include <stdlib.h>
+#include <time.h>
 
 static void zero_pointers(void* ptr, size_t const count) {
     /*
@@ -35,8 +36,8 @@ static void setup_singleplayer(struct board* b) {
 
     board_add_player(b, (struct vector) {bounds.x - 10, y_center});
 
-    b->p1_score = 0;
-    b->p2_score = -1;
+    b->p1_score = -1;
+    b->p2_score = 0;
 
     // wall acting as perfect opponent
     board_add_wall(b, (struct wall) {
@@ -242,6 +243,35 @@ static bool paddle_can_move(struct board* b, struct paddle* p, int y) {
     }
 
     return !current.intersects;
+}
+
+static int random_sign(void) {
+    /*
+     * returns 1 or -1.
+     */
+
+    return rand() % 2 * 2 - 1;
+}
+
+void board_reset_ball(struct board* b) {
+    /*
+     * sets the ball to a random point in the center of the board,
+     * going in a random direction.
+     */
+
+    struct vector bounds = get_max_bounds();
+    int x_center = bounds.x / 2;
+
+    srand(time(NULL));
+
+    // find a random height inside the playing field to spawn the ball at
+    int const playing_field_height = bounds.y - 2*PONG_OUTER_BUFFER - 2;
+    int const random = rand();
+
+    int y_rand = random % playing_field_height + PONG_OUTER_BUFFER + 1;
+
+    b->ball.pos      = (struct vector) {x_center, y_rand};
+    b->ball.velocity = (struct vector) {random_sign(), random_sign()};
 }
 
 int board_move_paddle(struct board* b, unsigned int player, int y) {

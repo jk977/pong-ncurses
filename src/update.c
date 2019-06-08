@@ -1,6 +1,60 @@
 #include "update.h"
 #include "physics/collision.h"
 
+enum score { P1_SCORE, P2_SCORE, NO_SCORE };
+
+enum score get_score_status(struct board* b) {
+    /*
+     * determine who scored by comparing x-coordinate of ball
+     * to paddle positions.
+     */
+
+    enum score status = NO_SCORE;
+    distance_t x_ball = b->ball.pos.x;
+    distance_t x_p1 = b->players[0]->pos.x;
+
+    // how many units the goal is behind each paddle
+    distance_t const goal_offset = 5;
+
+    if (b->players[1] == NULL) {
+        // single-player game, so P1 is on the right
+        if (x_ball >= x_p1 + goal_offset) {
+            // ball is behind P1; P2 (the wall) scores
+            status = P2_SCORE;
+        }
+    } else {
+        // multiplayer game, so P1 is on the left
+        distance_t x_p2 = b->players[1]->pos.x;
+
+        if (x_ball <= x_p1 - goal_offset) {
+            status = P2_SCORE;
+        } else if (x_ball >= x_p2 + goal_offset) {
+            status = P1_SCORE;
+        }
+    }
+
+    return status;
+}
+
+static void check_score(struct board* b) {
+    enum score status = get_score_status(b);
+
+    switch (status) {
+    case P1_SCORE:
+        ++b->p1_score;
+        break;
+    case P2_SCORE:
+        ++b->p2_score;
+        break;
+    default:
+        break;
+    }
+
+    if (status != NO_SCORE) {
+        board_reset_ball(b);
+    }
+}
+
 void update_board(struct board* b) {
     /*
      * calculates the next actual position of ball on the board using its
@@ -73,4 +127,5 @@ void update_board(struct board* b) {
     }
 
     b->ball.pos = actual_pos;
+    check_score(b);
 }

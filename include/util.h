@@ -27,7 +27,7 @@ extern "C" {
 #   define TRACE(...)
 #endif
 
-struct vector get_max_bounds();
+struct vector get_max_bounds(void);
 void* find_first_null(void* ptr, size_t count);
 void* malloc_first_null(void* ptr, size_t count, size_t type_size);
 

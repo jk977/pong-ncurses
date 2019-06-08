@@ -35,7 +35,7 @@ physics/%.o: src/physics/%.c
 all: buildpath clean util.o pong physics input.o src/main.c
 	$(CC) $(CFLAGS) $(shell find "$(BUILD_PATH)"/src/ -name "*.o") src/main.c -o "$(BUILD_PATH)"/pong
 
-physics: physics/collision.o physics/line.o physics/physics.o physics/ratio.o physics/vector.o
+physics: physics/collision.o physics/line.o physics/ratio.o physics/vector.o
 
 pong: objects.o board.o render.o update.o
 

@@ -1,8 +1,10 @@
-#include <stddef.h>
-#include <curses.h>
-
 #include "render.h"
 #include "config.h"
+#include "util.h"
+
+#include <stddef.h>
+#include <curses.h>
+#include <string.h>
 
 #define BALL_CHAR        '*'
 #define WALL_CHAR_HDASH  '-'
@@ -10,6 +12,10 @@
 #define WALL_CHAR_VDASH  ':'
 #define WALL_CHAR_VSOLID '|'
 #define WALL_CHAR_EMPTY  ' '
+
+#define SCORE_WALL_PREFIX   "Wall: "
+#define SCORE_P1_PREFIX     "P1: "
+#define SCORE_P2_PREFIX     "P2: "
 
 static chtype get_wall_char(struct wall* w) {
     switch (w->style) {
@@ -60,12 +66,8 @@ void render_paddle(struct paddle* p) {
     render_wall(&equiv);
 }
 
-void render_ball(struct ball* ball) {
-    if (ball == NULL) {
-        return;
-    }
-
-    mvaddch(ball->pos.y, ball->pos.x, BALL_CHAR);
+void render_ball(struct board* b) {
+    mvaddch(b->ball.pos.y, b->ball.pos.x, BALL_CHAR);
 }
 
 static void render_paddles(struct board* b) {
@@ -80,6 +82,34 @@ static void render_walls(struct board* b) {
     }
 }
 
+static void print_score(char const* prefix, int score, int x_center) {
+    if (score < 0) {
+        return;
+    }
+
+    char msg[strlen(prefix) + 5];
+    sprintf(msg, "%s%d", prefix, score);
+
+    int const x      = x_center - strlen(msg) / 2;
+    int const y_text = PONG_OUTER_BUFFER / 2;
+
+    mvprintw(y_text, x, msg);
+}
+
+void render_score(struct board* b) {
+    struct vector bounds = get_max_bounds();
+
+    if (b->p1_score < 0) {
+        int const center = bounds.x / 2;
+        print_score(SCORE_WALL_PREFIX, b->p2_score, center);
+    } else {
+        int const p1_center  = bounds.x / 4;
+        int const p2_center = 3*bounds.x / 4;
+        print_score(SCORE_P1_PREFIX, b->p1_score, p1_center);
+        print_score(SCORE_P2_PREFIX, b->p2_score, p2_center);
+    }
+}
+
 void render_board(struct board* b) {
     /*
      * order of drawing is important here.
@@ -89,5 +119,6 @@ void render_board(struct board* b) {
     clear();
     render_walls(b);
     render_paddles(b);
-    render_ball(&b->ball);
+    render_score(b);
+    render_ball(b);
 }

@@ -27,6 +27,7 @@ void board_destroy(struct board* b);
 int board_add_player(struct board* b, struct vector pos);
 int board_add_wall(struct board* b, struct wall w);
 
+void board_reset_ball(struct board* b);
 int board_move_paddle(struct board* b, unsigned int player, int y);
 
 #ifdef __cplusplus
