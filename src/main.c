@@ -52,10 +52,6 @@ void sanity_check(void) {
 }
 
 void setup_curses(void) {
-    /*
-     * initializes and configures curses window.
-     */
-
     setlocale(LC_ALL, "en_US.utf-8");
     initscr();
 
@@ -76,17 +72,13 @@ void setup_curses(void) {
 }
 
 void cleanup(void) {
-    /*
-     * tidying function invoked via atexit()
-     */
-
     endwin();
     board_destroy(main_board);
 }
 
 useconds_t period_from_freq(unsigned int hz) {
     /*
-     * convert hertz to a period, in microseconds
+     * convert frequency (Hz) to period (μs)
      *
      * note: math is based on the relation f=1/T, where the frequency f is in Hz
      *       and the period T is in seconds.
