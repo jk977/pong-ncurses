@@ -246,11 +246,11 @@ static bool paddle_can_move(struct board* b, struct paddle* p, int y) {
 }
 
 static int random_sign(void) {
-    /*
-     * returns 1 or -1.
-     */
-
-    return rand() % 2 * 2 - 1;
+    if (rand() % 2 == 0) {
+        return -1;
+    } else {
+        return 1;
+    }
 }
 
 void board_reset_ball(struct board* b) {
