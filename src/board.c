@@ -69,7 +69,8 @@ static void setup_singleplayer(struct board* b) {
 
 static void setup_multiplayer(struct board* b) {
     /*
-     * set 2 paddles, and only horizontal boundaries.
+     * two paddles are needed for multiplayer, and no vertical
+     * wall to bounce the ball off of
      */
 
     struct vector bounds = get_max_bounds();
@@ -117,10 +118,6 @@ static void setup_multiplayer(struct board* b) {
 }
 
 struct board* board_init(bool is_multiplayer) {
-    /*
-     * constructor for board.
-     */
-
     struct board* b = malloc(sizeof *b);
 
     if (b == NULL) {
@@ -151,10 +148,6 @@ struct board* board_init(bool is_multiplayer) {
 }
 
 void board_destroy(struct board* b) {
-    /*
-     * destructor for board.
-     */
-
     for (size_t i = 0; i < PONG_PLAYER_MAX; ++i) {
         free(b->players[i]);
     }
