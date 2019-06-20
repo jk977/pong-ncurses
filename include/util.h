@@ -28,12 +28,13 @@ extern "C" {
 #endif
 
 // macro that returns ERR if an OK/ERR-returning function fails
-#define TRY_FN(ret)       \
-    do {                    \
-        if (ret == ERR) {   \
-            return ERR;     \
-        }                   \
-    } while (0)             \
+#define TRY_FN(ret)                                         \
+    do {                                                    \
+        if (ret == ERR) {                                   \
+            ERROR("TRY_FN failed at line %d.", __LINE__);   \
+            return ERR;                                     \
+        }                                                   \
+    } while (0)
 
 struct vector get_max_bounds(void);
 void* find_first_null(void* ptr, size_t count);

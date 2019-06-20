@@ -53,24 +53,29 @@ int sanity_check(void) {
     return EXIT_SUCCESS;
 }
 
-void setup_curses(void) {
+int setup_curses(void) {
     setlocale(LC_ALL, "en_US.utf-8");
-    initscr();
 
-    if (has_colors()) {
-        start_color();
-        init_pair(PONG_MAIN_COLOR, PONG_MAIN_FG, PONG_MAIN_BG);
-        bkgd(COLOR_PAIR(PONG_MAIN_COLOR));
+    if (initscr() == NULL) {
+        return ERR;
     }
 
-    cbreak();       // game must have inputs immediately available
-    noecho();       // games shouldn't display inputs (in most cases)
-    curs_set(0);    // make cursor invisible when moving it around screen
+    if (has_colors()) {
+        TRY_FN( start_color() );
+        TRY_FN( init_pair(PONG_MAIN_COLOR, PONG_MAIN_FG, PONG_MAIN_BG) );
+        TRY_FN( bkgd(COLOR_PAIR(PONG_MAIN_COLOR)) );
+    }
 
-    nodelay(stdscr, TRUE);    // don't block on getch()
-    scrollok(stdscr, FALSE);
-    intrflush(stdscr, FALSE);
-    keypad(stdscr, TRUE);
+    TRY_FN( cbreak() );       // game must have inputs immediately available
+    TRY_FN( noecho() );       // games shouldn't display inputs (in most cases)
+    TRY_FN( curs_set(0) );    // make cursor invisible when moving it around screen
+
+    TRY_FN( nodelay(stdscr, TRUE) );    // don't block on getch()
+    TRY_FN( scrollok(stdscr, FALSE) );
+    TRY_FN( intrflush(stdscr, FALSE) );
+    TRY_FN( keypad(stdscr, TRUE) );
+
+    return OK;
 }
 
 void cleanup(void) {
@@ -95,7 +100,7 @@ int run_game(bool is_multiplayer) {
 
     if (main_board == NULL) {
         ERROR("Failed to initialize board.");
-        return EXIT_FAILURE;
+        return ERR;
     }
 
     useconds_t const sleep_length = period_from_freq(PONG_REFRESH_RATE);
@@ -104,20 +109,13 @@ int run_game(bool is_multiplayer) {
         handle_input(main_board);
         update_board(main_board);
 
-        if (render_board(main_board) == ERR) {
-            ERROR("Failed to render board.");
-            return EXIT_FAILURE;
-        }
-
-        if (refresh() == ERR) {
-            ERROR("Failed to refresh window.");
-            return EXIT_FAILURE;
-        }
+        TRY_FN( render_board(main_board) );
+        TRY_FN( refresh() );
 
         usleep(sleep_length);
     }
 
-    return EXIT_SUCCESS;
+    return OK;
 }
 
 int main(void) {
