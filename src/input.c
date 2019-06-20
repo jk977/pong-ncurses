@@ -18,4 +18,3 @@ void handle_input(struct board* b) {
         break;
     }
 }
-

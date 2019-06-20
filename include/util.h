@@ -14,11 +14,11 @@
 extern "C" {
 #endif
 
-#define ERROR(...)                      \
-    do {                                \
-        fprintf(stderr, "pong: ");      \
-        fprintf(stderr, __VA_ARGS__);   \
-        fprintf(stderr, "\n");          \
+#define ERROR(...)                          \
+    do {                                    \
+        fprintf(stderr, "%s: ", __func__);  \
+        fprintf(stderr, __VA_ARGS__);       \
+        fprintf(stderr, "\n");              \
     } while (0)
 
 #ifdef DEBUG
@@ -26,6 +26,14 @@ extern "C" {
 #else
 #   define TRACE(...)
 #endif
+
+// macro that returns ERR if an OK/ERR-returning function fails
+#define TRY_FN(ret)       \
+    do {                    \
+        if (ret == ERR) {   \
+            return ERR;     \
+        }                   \
+    } while (0)             \
 
 struct vector get_max_bounds(void);
 void* find_first_null(void* ptr, size_t count);

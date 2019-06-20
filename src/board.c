@@ -19,12 +19,18 @@ static void zero_pointers(void* ptr, size_t const count) {
     }
 }
 
-static void setup_singleplayer(struct board* b) {
+static int setup_singleplayer(struct board* b) {
     /*
      * only set 1 paddle, and have a wall covering the entire left side.
+     * returns 0 on success, or a negative number otherwise.
      */
 
     struct vector bounds = get_max_bounds();
+
+    if (bounds.x == -1) {
+        return -1;
+    }
+
     int x_center = bounds.x / 2;
     int y_center = bounds.y / 2;
 
@@ -34,13 +40,13 @@ static void setup_singleplayer(struct board* b) {
         .multiplier = 1
     };
 
-    board_add_player(b, (struct vector) {bounds.x - 10, y_center});
-
     b->p1_score = -1;
     b->p2_score = 0;
 
+    int status = board_add_player(b, (struct vector) {bounds.x - 10, y_center});
+
     // wall acting as perfect opponent
-    board_add_wall(b, (struct wall) {
+    status |= board_add_wall(b, (struct wall) {
         .pos      = {10, PONG_OUTER_BUFFER},
         .length   = bounds.y - 2*PONG_OUTER_BUFFER + 1,
         .tangible = true,
@@ -49,7 +55,7 @@ static void setup_singleplayer(struct board* b) {
     });
 
     // upper playing field boundary
-    board_add_wall(b, (struct wall) {
+    status |= board_add_wall(b, (struct wall) {
         .pos      = {PONG_OUTER_BUFFER, PONG_OUTER_BUFFER},
         .length   = bounds.x - 2*PONG_OUTER_BUFFER,
         .tangible = true,
@@ -58,16 +64,18 @@ static void setup_singleplayer(struct board* b) {
     });
 
     // lower playing field boundary
-    board_add_wall(b, (struct wall) {
+    status |= board_add_wall(b, (struct wall) {
         .pos      = {PONG_OUTER_BUFFER, bounds.y - PONG_OUTER_BUFFER},
         .length   = bounds.x - 2*PONG_OUTER_BUFFER,
         .tangible = true,
         .dir      = HORIZONTAL,
         .style    = DASHED
     });
+
+    return status;
 }
 
-static void setup_multiplayer(struct board* b) {
+static int setup_multiplayer(struct board* b) {
     /*
      * two paddles are needed for multiplayer, and no vertical
      * wall to bounce the ball off of
@@ -76,9 +84,6 @@ static void setup_multiplayer(struct board* b) {
     struct vector bounds = get_max_bounds();
     int x_center = bounds.x / 2;
     int y_center = bounds.y / 2;
-
-    board_add_player(b, (struct vector) {10, y_center});
-    board_add_player(b, (struct vector) {bounds.x - 10, y_center});
 
     b->ball = (struct ball) {
         .pos = {x_center, y_center},
@@ -89,8 +94,11 @@ static void setup_multiplayer(struct board* b) {
     b->p1_score = 0;
     b->p2_score = 0;
 
+    int status   = board_add_player(b, (struct vector) {10, y_center});
+    status      |= board_add_player(b, (struct vector) {bounds.x - 10, y_center});
+
     // intangible center line dividing the players' sides
-    board_add_wall(b, (struct wall) {
+    status |= board_add_wall(b, (struct wall) {
         .pos      = {x_center, PONG_OUTER_BUFFER},
         .length   = bounds.y - 2*PONG_OUTER_BUFFER,
         .tangible = false,
@@ -99,7 +107,7 @@ static void setup_multiplayer(struct board* b) {
     });
 
     // upper playing field boundary
-    board_add_wall(b, (struct wall) {
+    status |= board_add_wall(b, (struct wall) {
         .pos      = {PONG_OUTER_BUFFER, PONG_OUTER_BUFFER},
         .length   = bounds.x - 2*PONG_OUTER_BUFFER,
         .tangible = true,
@@ -108,13 +116,15 @@ static void setup_multiplayer(struct board* b) {
     });
 
     // lower playing field boundary
-    board_add_wall(b, (struct wall) {
+    status |= board_add_wall(b, (struct wall) {
         .pos      = {PONG_OUTER_BUFFER, bounds.y - PONG_OUTER_BUFFER},
         .length   = bounds.x - 2*PONG_OUTER_BUFFER,
         .tangible = true,
         .dir      = HORIZONTAL,
         .style    = DASHED
     });
+
+    return status;
 }
 
 struct board* board_init(bool is_multiplayer) {
@@ -138,10 +148,17 @@ struct board* board_init(bool is_multiplayer) {
     zero_pointers(&b->players[0], PONG_PLAYER_MAX);
     zero_pointers(b->walls, wall_count);
 
+    int status;
+
     if (is_multiplayer) {
-        setup_multiplayer(b);
+        status = setup_multiplayer(b);
     } else {
-        setup_singleplayer(b);
+        status = setup_singleplayer(b);
+    }
+
+    if (status != 0) {
+        free(b);
+        b = NULL;
     }
 
     return b;

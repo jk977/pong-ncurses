@@ -21,7 +21,7 @@
 unsigned int PONG_REFRESH_RATE = 15;
 struct board* main_board = NULL;
 
-void sanity_check(void) {
+int sanity_check(void) {
     /*
      * make sure everything is ok before starting main program.
      * mainly for ensuring window isn't too small for game.
@@ -34,7 +34,7 @@ void sanity_check(void) {
     if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1) {
         // if ioctl fails, something's seriously wrong, so don't continue
         perror("sanity_check");
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
 
     x = ws.ws_col;
@@ -43,12 +43,14 @@ void sanity_check(void) {
     TRACE("Found window dimensions: %dx%d\n", x, y);
 
     if (x < PONG_REQUIRED_X || y < PONG_REQUIRED_Y) {
-        ERROR("sanity_check: Window size is too small "
+        ERROR("Window size is too small "
               "(minimum required dimensions: %dx%d).\n",
               PONG_REQUIRED_X,
               PONG_REQUIRED_Y);
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
+
+    return EXIT_SUCCESS;
 }
 
 void setup_curses(void) {
@@ -95,15 +97,29 @@ int main(void) {
 
     main_board = board_init(true);
 
+    if (main_board == NULL) {
+        ERROR("Failed to initialize board.");
+        return EXIT_FAILURE;
+    }
+
     useconds_t const sleep_length = period_from_freq(PONG_REFRESH_RATE);
 
     while (true) {
         handle_input(main_board);
         update_board(main_board);
-        render_board(main_board);
-        refresh();
+
+        if (render_board(main_board) == ERR) {
+            ERROR("Failed to render board.");
+            return EXIT_FAILURE;
+        }
+
+        if (refresh() == ERR) {
+            ERROR("Failed to refresh window.");
+            return EXIT_FAILURE;
+        }
+
         usleep(sleep_length);
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }

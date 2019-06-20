@@ -12,11 +12,11 @@
 extern "C" {
 #endif
 
-void render_wall(struct wall* w);
-void render_paddle(struct paddle* p);
-void render_ball(struct board* b);
-void render_score(struct board* b);
-void render_board(struct board* b);
+int render_wall(struct wall* w);
+int render_paddle(struct paddle* p);
+int render_ball(struct board* b);
+int render_score(struct board* b);
+int render_board(struct board* b);
 
 #ifdef __cplusplus
 }
