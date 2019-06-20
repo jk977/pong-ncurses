@@ -1,5 +1,6 @@
 #include "update.h"
 #include "physics/collision.h"
+#include "util.h"
 
 enum score { P1_SCORE, P2_SCORE, NO_SCORE };
 
@@ -36,7 +37,7 @@ enum score get_score_status(struct board* b) {
     return status;
 }
 
-static void check_score(struct board* b) {
+static int update_score(struct board* b) {
     enum score status = get_score_status(b);
 
     switch (status) {
@@ -51,11 +52,13 @@ static void check_score(struct board* b) {
     }
 
     if (status != NO_SCORE) {
-        board_reset_ball(b);
+        TRY_FN( board_reset_ball(b) );
     }
+
+    return OK;
 }
 
-void update_board(struct board* b) {
+int update_board(struct board* b) {
     /*
      * calculates the next actual position of ball on the board using its
      * projected position and whether or not it collides with a wall.
@@ -127,5 +130,5 @@ void update_board(struct board* b) {
     }
 
     b->ball.pos = actual_pos;
-    check_score(b);
+    return update_score(b);
 }

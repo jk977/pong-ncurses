@@ -13,9 +13,7 @@ static int gcd(int a, int b) {
 }
 
 void ratio_simplify(struct ratio* r) {
-    if (r->num == 0) {
-        r->denom = 1;
-    } else if (r->denom == 0) {
+    if (r->denom == 0) {
         r->num = 1;
     } else {
         int common = gcd(r->num, r->denom);

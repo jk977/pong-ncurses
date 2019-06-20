@@ -107,8 +107,8 @@ int run_game(bool is_multiplayer) {
 
     while (true) {
         handle_input(main_board);
-        update_board(main_board);
 
+        TRY_FN( update_board(main_board) );
         TRY_FN( render_board(main_board) );
         TRY_FN( refresh() );
 
@@ -126,5 +126,9 @@ int main(void) {
     setup_curses();
     atexit(cleanup);
 
-    return run_game(true);
+    if (run_game(true) == ERR) {
+        return EXIT_FAILURE;
+    } else {
+        return EXIT_SUCCESS;
+    }
 }

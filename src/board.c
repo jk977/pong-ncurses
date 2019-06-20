@@ -28,7 +28,7 @@ static int setup_singleplayer(struct board* b) {
     struct vector bounds = get_max_bounds();
 
     if (bounds.x == -1) {
-        return -1;
+        return ERR;
     }
 
     int x_center = bounds.x / 2;
@@ -43,36 +43,36 @@ static int setup_singleplayer(struct board* b) {
     b->p1_score = -1;
     b->p2_score = 0;
 
-    int status = board_add_player(b, (struct vector) {bounds.x - 10, y_center});
+    TRY_FN( board_add_player(b, (struct vector) {bounds.x - 10, y_center}) );
 
     // wall acting as perfect opponent
-    status |= board_add_wall(b, (struct wall) {
+    TRY_FN( board_add_wall(b, (struct wall) {
         .pos      = {10, PONG_OUTER_BUFFER},
         .length   = bounds.y - 2*PONG_OUTER_BUFFER + 1,
         .tangible = true,
         .dir      = VERTICAL,
         .style    = SOLID
-    });
+    }) );
 
     // upper playing field boundary
-    status |= board_add_wall(b, (struct wall) {
+    TRY_FN( board_add_wall(b, (struct wall) {
         .pos      = {PONG_OUTER_BUFFER, PONG_OUTER_BUFFER},
         .length   = bounds.x - 2*PONG_OUTER_BUFFER,
         .tangible = true,
         .dir      = HORIZONTAL,
         .style    = DASHED
-    });
+    }) );
 
     // lower playing field boundary
-    status |= board_add_wall(b, (struct wall) {
+    TRY_FN( board_add_wall(b, (struct wall) {
         .pos      = {PONG_OUTER_BUFFER, bounds.y - PONG_OUTER_BUFFER},
         .length   = bounds.x - 2*PONG_OUTER_BUFFER,
         .tangible = true,
         .dir      = HORIZONTAL,
         .style    = DASHED
-    });
+    }) );
 
-    return status;
+    return OK;
 }
 
 static int setup_multiplayer(struct board* b) {
@@ -82,6 +82,11 @@ static int setup_multiplayer(struct board* b) {
      */
 
     struct vector bounds = get_max_bounds();
+
+    if (bounds.x == -1) {
+        return ERR;
+    }
+
     int x_center = bounds.x / 2;
     int y_center = bounds.y / 2;
 
@@ -94,37 +99,37 @@ static int setup_multiplayer(struct board* b) {
     b->p1_score = 0;
     b->p2_score = 0;
 
-    int status   = board_add_player(b, (struct vector) {10, y_center});
-    status      |= board_add_player(b, (struct vector) {bounds.x - 10, y_center});
+    TRY_FN( board_add_player(b, (struct vector) {10, y_center}) );
+    TRY_FN( board_add_player(b, (struct vector) {bounds.x - 10, y_center}) );
 
     // intangible center line dividing the players' sides
-    status |= board_add_wall(b, (struct wall) {
+    TRY_FN( board_add_wall(b, (struct wall) {
         .pos      = {x_center, PONG_OUTER_BUFFER},
         .length   = bounds.y - 2*PONG_OUTER_BUFFER,
         .tangible = false,
         .dir      = VERTICAL,
         .style    = DASHED
-    });
+    }) );
 
     // upper playing field boundary
-    status |= board_add_wall(b, (struct wall) {
+    TRY_FN( board_add_wall(b, (struct wall) {
         .pos      = {PONG_OUTER_BUFFER, PONG_OUTER_BUFFER},
         .length   = bounds.x - 2*PONG_OUTER_BUFFER,
         .tangible = true,
         .dir      = HORIZONTAL,
         .style    = DASHED
-    });
+    }) );
 
     // lower playing field boundary
-    status |= board_add_wall(b, (struct wall) {
+    TRY_FN( board_add_wall(b, (struct wall) {
         .pos      = {PONG_OUTER_BUFFER, bounds.y - PONG_OUTER_BUFFER},
         .length   = bounds.x - 2*PONG_OUTER_BUFFER,
         .tangible = true,
         .dir      = HORIZONTAL,
         .style    = DASHED
-    });
+    }) );
 
-    return status;
+    return OK;
 }
 
 struct board* board_init(bool is_multiplayer) {
@@ -181,15 +186,13 @@ int board_add_player(struct board* b, struct vector pos) {
      * add new player to board. order is important; the first to be added
      * is player 1, second is player 2 (and if more players were supported,
      * the pattern would continue).
-     *
-     * returns 0 on success, -1 otherwise.
      */
 
     struct paddle* next = malloc_first_null(b->players, PONG_PLAYER_MAX, sizeof *next);
 
     if (next == NULL) {
         // max number of players or failed to allocate memory
-        return -1;
+        return ERR;
     }
 
     // vertically center paddle around given position
@@ -200,24 +203,23 @@ int board_add_player(struct board* b, struct vector pos) {
         .pos    = pos
     };
 
-    return 0;
+    return OK;
 }
 
 int board_add_wall(struct board* b, struct wall w) {
     /*
-     * adds wall to board, essentially the same way as board_add_player().
-     * returns 0 on success, -1 otherwise.
+     * adds wall to board, essentially the same way as board_add_player()
      */
 
     struct wall* next = malloc_first_null(b->walls, b->wall_count, sizeof *next);
 
     if (next == NULL) {
-        return -1;
+        return ERR;
     }
 
     *next = w;
 
-    return 0;
+    return OK;
 }
 
 static bool paddle_can_move(struct board* b, struct paddle* p, int y) {
@@ -263,18 +265,21 @@ static int random_sign(void) {
     }
 }
 
-void board_reset_ball(struct board* b) {
+int board_reset_ball(struct board* b) {
     /*
      * sets the ball to a random point in the center of the board,
      * going in a random direction.
      */
 
     struct vector bounds = get_max_bounds();
+
+    if (bounds.x == -1) {
+        return ERR;
+    }
+
     int x_center = bounds.x / 2;
-
     srand(time(NULL));
-
-    // find a random height inside the playing field to spawn the ball at
+// find a random height inside the playing field to spawn the ball at
     int const playing_field_height = bounds.y - 2*PONG_OUTER_BUFFER - 2;
     int const random = rand();
 
@@ -282,25 +287,26 @@ void board_reset_ball(struct board* b) {
 
     b->ball.pos      = (struct vector) {x_center, y_rand};
     b->ball.velocity = (struct vector) {random_sign(), random_sign()};
+
+    return OK;
 }
 
 int board_move_paddle(struct board* b, unsigned int player, int y) {
     /*
      * moves paddle <y> units vertically, unless the paddle is unable to move.
      * y < 0 indicates upward movement, and y > 0 gives downward movement
-     * returns 0 on successful move, -1 otherwise.
      */
 
     if (player > 1) {
-        return -1;
+        return ERR;
     }
 
     struct paddle* p = b->players[player];
 
     if (p == NULL || !paddle_can_move(b, p, y)) {
-        return -1;
+        return ERR;
     }
 
     p->pos.y += y;
-    return 0;
+    return OK;
 }

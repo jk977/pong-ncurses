@@ -7,6 +7,6 @@
 
 #include "board.h"
 
-void update_board(struct board* b);
+int update_board(struct board* b);
 
 #endif // UPDATE_H_
