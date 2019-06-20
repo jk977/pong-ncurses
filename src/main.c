@@ -34,7 +34,7 @@ int sanity_check(void) {
     if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1) {
         // if ioctl fails, something's seriously wrong, so don't continue
         perror("sanity_check");
-        return EXIT_FAILURE;
+        return ERR;
     }
 
     x = ws.ws_col;
@@ -47,10 +47,10 @@ int sanity_check(void) {
               "(minimum required dimensions: %dx%d).\n",
               PONG_REQUIRED_X,
               PONG_REQUIRED_Y);
-        return EXIT_FAILURE;
+        return ERR;
     }
 
-    return EXIT_SUCCESS;
+    return OK;
 }
 
 int setup_curses(void) {
@@ -119,7 +119,10 @@ int run_game(bool is_multiplayer) {
 }
 
 int main(void) {
-    sanity_check();
+    if (sanity_check() == ERR) {
+        return EXIT_FAILURE;
+    }
+
     setup_curses();
     atexit(cleanup);
 
