@@ -90,12 +90,8 @@ useconds_t period_from_freq(unsigned int hz) {
     return 1.0/hz * usec_per_sec;
 }
 
-int main(void) {
-    sanity_check();
-    setup_curses();
-    atexit(cleanup);
-
-    main_board = board_init(true);
+int run_game(bool is_multiplayer) {
+    main_board = board_init(is_multiplayer);
 
     if (main_board == NULL) {
         ERROR("Failed to initialize board.");
@@ -122,4 +118,12 @@ int main(void) {
     }
 
     return EXIT_SUCCESS;
+}
+
+int main(void) {
+    sanity_check();
+    setup_curses();
+    atexit(cleanup);
+
+    return run_game(true);
 }
