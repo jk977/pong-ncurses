@@ -279,7 +279,8 @@ int board_reset_ball(struct board* b) {
 
     int x_center = bounds.x / 2;
     srand(time(NULL));
-// find a random height inside the playing field to spawn the ball at
+
+    // find a random height inside the playing field to spawn the ball at
     int const playing_field_height = bounds.y - 2*PONG_OUTER_BUFFER - 2;
     int const random = rand();
 
