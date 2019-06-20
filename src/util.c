@@ -60,3 +60,16 @@ void* malloc_first_null(void* ptr, size_t count, size_t type_size) {
 
     return *p_next;
 }
+
+int center_horiz(int x_middle, int length) {
+    /*
+     * calculates starting x-coordinate needed to center an object around x_middle
+     */
+
+    return x_middle - length / 2;
+}
+
+int center_in_window(int length) {
+    int const x_center = get_max_bounds().x / 2;
+    return center_horiz(x_center, length);
+}

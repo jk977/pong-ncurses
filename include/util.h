@@ -40,6 +40,9 @@ struct vector get_max_bounds(void);
 void* find_first_null(void* ptr, size_t count);
 void* malloc_first_null(void* ptr, size_t count, size_t type_size);
 
+int center_horiz(int x_middle, int length);
+int center_in_window(int length);
+
 #ifdef __cplusplus
 }
 #endif

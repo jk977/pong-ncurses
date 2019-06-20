@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 
+#include "menu.h"
 #include "objects.h"
 
 #ifdef __cplusplus

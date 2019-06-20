@@ -105,7 +105,7 @@ static int print_score(char const* prefix, int score, int x_center) {
         return ERR;
     }
 
-    int const x      = x_center - strlen(msg) / 2;
+    int const x      = center_horiz(x_center, strlen(msg));
     int const y_text = PONG_OUTER_BUFFER / 2;
 
     return mvprintw(y_text, x, msg);

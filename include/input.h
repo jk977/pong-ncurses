@@ -17,7 +17,7 @@ extern "C" {
 #define INPUT_P2_UP     'i'
 #define INPUT_P2_DOWN   'k'
 
-void handle_input(struct board* b);
+int board_handle_input(struct board* b);
 
 #ifdef __cplusplus
 }

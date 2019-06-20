@@ -1,24 +1,27 @@
 #define _DEFAULT_SOURCE
 
-#include <stdlib.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include <curses.h>
 #include <locale.h>
+#include <signal.h>
 #include <unistd.h>
 
 #include <sys/ioctl.h>
 
 #include "board.h"
+#include "menu.h"
 
+#include "input.h"
 #include "render.h"
 #include "update.h"
-#include "input.h"
 
 #include "config.h"
 #include "util.h"
 
-unsigned int PONG_REFRESH_RATE = 15;
+unsigned int PONG_REFRESH_RATE = PONG_EASY_HZ;
 struct board* main_board = NULL;
 
 int sanity_check(void) {
@@ -95,7 +98,92 @@ useconds_t period_from_freq(unsigned int hz) {
     return 1.0/hz * usec_per_sec;
 }
 
-int run_game(bool is_multiplayer) {
+bool get_confirmation(void) {
+    chtype c = getch();
+    return c == 'y' || c == 'Y';
+}
+
+int print_centered(char* msg, int y) {
+    /*
+     * print message at specified y-coordinate, centered horizontally
+     */
+
+    int x_start  = center_in_window(strlen(msg));
+    return mvaddstr(y, x_start, msg);
+}
+
+int run_menu(unsigned int* refresh_rate, bool* is_multiplayer) {
+    /*
+     * ask user for some game settings.
+     *
+     * note: this could definitely be accomplished more elegantly,
+     *       but it's a little thrown together due to time constraints.
+     *
+     * note 2: function takes a pointer to refresh_rate instead of
+     *         explicitly manipulating PONG_REFRESH_RATE intentionally,
+     *         to minimize side effects.
+     */
+
+    struct vector bounds = get_max_bounds();
+
+    if (bounds.x == -1) {
+        return ERR;
+    }
+
+    int y_center = bounds.y / 2;
+
+    // let getch() block
+    TRY_FN( nodelay(stdscr, FALSE) );
+
+    // first user prompt (mode)
+    TRY_FN( clear() );
+    TRY_FN( print_centered("Enable multiplayer? [y/N]", y_center-2) );
+
+    *is_multiplayer = get_confirmation();
+
+    // second user prompt (difficulty)
+    TRY_FN( clear() );
+    TRY_FN( print_centered("Enable hard mode? [y/N]", y_center-2) );
+
+    if (get_confirmation()) {
+        *refresh_rate = PONG_HARD_HZ;
+    } else {
+        *refresh_rate = PONG_EASY_HZ;
+    }
+
+    // third user prompt (controls)
+    TRY_FN( clear() );
+    TRY_FN( print_centered("Controls:", y_center-2) );
+
+    if (*is_multiplayer) {
+        TRY_FN( print_centered("Player 1 (left) moves up/down with W/S.", y_center-1) );
+        TRY_FN( print_centered("Player 2 (right) moves up/down with I/K.", y_center) );
+    } else {
+        TRY_FN( print_centered("Move the paddle up/down with W/S.", y_center-1) );
+    }
+
+    TRY_FN( print_centered("Don't let the ball get past your paddle!", y_center+2) );
+    TRY_FN( getch() );
+    TRY_FN( clear() );
+
+    TRY_FN( nodelay(stdscr, TRUE) );
+
+    return OK;
+}
+
+int run_game(void) {
+    /*
+     * runs the starting menu and main game loop
+     */
+
+    bool is_multiplayer;
+    TRY_FN( run_menu(&PONG_REFRESH_RATE, &is_multiplayer) );
+
+    if (main_board != NULL) {
+        // reset board if it already exists
+        board_destroy(main_board);
+    } 
+
     main_board = board_init(is_multiplayer);
 
     if (main_board == NULL) {
@@ -103,19 +191,25 @@ int run_game(bool is_multiplayer) {
         return ERR;
     }
 
-    useconds_t const sleep_length = period_from_freq(PONG_REFRESH_RATE);
-
     while (true) {
-        handle_input(main_board);
+        board_handle_input(main_board);
 
         TRY_FN( update_board(main_board) );
         TRY_FN( render_board(main_board) );
         TRY_FN( refresh() );
 
-        usleep(sleep_length);
+        usleep(period_from_freq(PONG_REFRESH_RATE));
     }
 
     return OK;
+}
+
+void restart_game(int signal) {
+    (void) signal;
+    bool is_multiplayer = false;
+
+    run_menu(&PONG_REFRESH_RATE, &is_multiplayer);
+    main_board = board_init(is_multiplayer);
 }
 
 int main(void) {
@@ -126,7 +220,19 @@ int main(void) {
     setup_curses();
     atexit(cleanup);
 
-    if (run_game(true) == ERR) {
+    // when SIGUSR1 received, block SIGINTs and restart game
+    struct sigaction act = {0};
+    act.sa_handler = restart_game;
+
+    sigemptyset(&act.sa_mask);
+    sigaddset(&act.sa_mask, SIGINT);
+
+    if (sigaction(SIGUSR1, &act, NULL) == -1) {
+        perror("main");
+        return EXIT_FAILURE;
+    }
+
+    if (run_game() == ERR) {
         return EXIT_FAILURE;
     } else {
         return EXIT_SUCCESS;
