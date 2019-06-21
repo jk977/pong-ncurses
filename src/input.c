@@ -3,8 +3,6 @@
 
 #include <signal.h>
 
-#define INPUT_ESCAPE 27
-
 int board_handle_input(struct board* b) {
     switch (getch()) {
     case INPUT_P1_UP:
@@ -15,7 +13,7 @@ int board_handle_input(struct board* b) {
         return board_move_paddle(b, 1, -1);
     case INPUT_P2_DOWN:
         return board_move_paddle(b, 1, 1);
-    case INPUT_ESCAPE:
+    case KEY_ENTER:
         return screen_pause();
     case ERR:
         return ERR;

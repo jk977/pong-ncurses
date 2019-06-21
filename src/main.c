@@ -1,28 +1,13 @@
-#define _DEFAULT_SOURCE
+#include "game.h"
+#include "util.h"
 
-#include <stdbool.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <curses.h>
 #include <locale.h>
-#include <signal.h>
 #include <unistd.h>
 
 #include <sys/ioctl.h>
-
-#include "board.h"
-#include "screens.h"
-
-#include "input.h"
-#include "render.h"
-#include "update.h"
-
-#include "config.h"
-#include "util.h"
-
-unsigned int PONG_REFRESH_RATE = PONG_EASY_HZ;
-struct board* main_board = NULL;
 
 int sanity_check(void) {
     /*
@@ -56,110 +41,12 @@ int sanity_check(void) {
     return OK;
 }
 
-int setup_curses(void) {
-    setlocale(LC_ALL, "en_US.utf-8");
-
-    if (initscr() == NULL) {
-        return ERR;
-    }
-
-    if (has_colors()) {
-        TRY_FN( start_color() );
-        TRY_FN( init_pair(PONG_MAIN_COLOR, PONG_MAIN_FG, PONG_MAIN_BG) );
-        TRY_FN( bkgd(COLOR_PAIR(PONG_MAIN_COLOR)) );
-    }
-
-    TRY_FN( cbreak() );       // game must have inputs immediately available
-    TRY_FN( noecho() );       // games shouldn't display inputs (in most cases)
-    TRY_FN( curs_set(0) );    // make cursor invisible when moving it around screen
-
-    TRY_FN( nodelay(stdscr, TRUE) );    // don't block on getch()
-    TRY_FN( scrollok(stdscr, FALSE) );
-    TRY_FN( intrflush(stdscr, FALSE) );
-    TRY_FN( keypad(stdscr, TRUE) );
-
-    return OK;
-}
-
-void cleanup(void) {
-    endwin();
-    board_destroy(main_board);
-}
-
-useconds_t period_from_freq(unsigned int hz) {
-    /*
-     * convert frequency (Hz) to period (μs)
-     *
-     * note: math is based on the relation f=1/T, where the frequency f is in Hz
-     *       and the period T is in seconds.
-     */
-
-    int const usec_per_sec = 1000000;
-    return 1.0/hz * usec_per_sec;
-}
-
-int run_game(void) {
-    /*
-     * runs the starting menu and main game loop
-     */
-
-    bool is_multiplayer;
-    TRY_FN( screen_start(&PONG_REFRESH_RATE, &is_multiplayer) );
-
-    if (main_board != NULL) {
-        // reset board if it already exists
-        board_destroy(main_board);
-    } 
-
-    main_board = board_init(is_multiplayer);
-
-    if (main_board == NULL) {
-        ERROR("Failed to initialize board.");
-        return ERR;
-    }
-
-    while (true) {
-        board_handle_input(main_board);
-
-        TRY_FN( update_board(main_board) );
-        TRY_FN( render_board(main_board) );
-        TRY_FN( refresh() );
-
-        usleep(period_from_freq(PONG_REFRESH_RATE));
-    }
-
-    return OK;
-}
-
-void restart_game(int signal) {
-    (void) signal;
-    bool is_multiplayer = false;
-
-    screen_start(&PONG_REFRESH_RATE, &is_multiplayer);
-    main_board = board_init(is_multiplayer);
-}
-
 int main(void) {
     if (sanity_check() == ERR) {
         return EXIT_FAILURE;
     }
 
-    setup_curses();
-    atexit(cleanup);
-
-    // when SIGUSR1 received, block SIGINTs and restart game
-    struct sigaction act = {0};
-    act.sa_handler = restart_game;
-
-    sigemptyset(&act.sa_mask);
-    sigaddset(&act.sa_mask, SIGINT);
-
-    if (sigaction(SIGUSR1, &act, NULL) == -1) {
-        perror("main");
-        return EXIT_FAILURE;
-    }
-
-    if (run_game() == ERR) {
+    if (game_run() == ERR) {
         return EXIT_FAILURE;
     } else {
         return EXIT_SUCCESS;

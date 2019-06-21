@@ -23,10 +23,11 @@ extern "C" {
 // misc settings
 #define PONG_PADDLE_HEIGHT 4  /* rows */
 #define PONG_PLAYER_MAX    2
+#define PONG_WIN_SCORE     10
 #define PONG_OUTER_BUFFER  5  /* rows/cols */
 
-#define PONG_EASY_HZ       15
-#define PONG_HARD_HZ       30
+#define PONG_EASY_HZ    15
+#define PONG_HARD_HZ    30
 
 // runtime settings
 extern unsigned int PONG_REFRESH_RATE; /* Hz */

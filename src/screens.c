@@ -69,7 +69,8 @@ int screen_start(unsigned int* refresh_rate, bool* is_multiplayer) {
         TRY_FN( print_centered("Move the paddle up/down with W/S.", y_center-1) );
     }
 
-    TRY_FN( print_centered("Don't let the ball get past your paddle!", y_center+2) );
+    TRY_FN( print_centered("Pause with Enter.", y_center+2) );
+    TRY_FN( print_centered("Don't let the ball get past your paddle!", y_center+3) );
     TRY_FN( getch() );
     TRY_FN( clear() );
 
@@ -77,6 +78,23 @@ int screen_start(unsigned int* refresh_rate, bool* is_multiplayer) {
 
     return OK;
 }
+
 int screen_pause(void) {
+    return OK;
+}
+
+int screen_win(char const* player) {
+    char* suffix = " wins!";
+
+    char msg[strlen(player) + strlen(suffix) + 1];
+    sprintf(msg, "%s%s", player, suffix);
+
+    int const y = get_max_bounds().y / 2;
+    TRY_FN( print_centered(msg, y) );
+
+    TRY_FN( nodelay(stdscr, FALSE) );
+    TRY_FN( getch() );
+    TRY_FN( nodelay(stdscr, TRUE) );
+
     return OK;
 }

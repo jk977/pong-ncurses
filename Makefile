@@ -1,7 +1,7 @@
 BUILD_PATH ?= ./build
 
 CC ?= gcc
-CFLAGS ?= -I./include -lncurses -Wall -Wextra -Werror -pedantic -std=c11
+CFLAGS ?= -I./include -lncurses -D_DEFAULT_SOURCE -Wall -Wextra -Werror -pedantic -std=c11
 
 ifdef DEBUG
 	CFLAGS += -g3 -DDEBUG
@@ -32,7 +32,7 @@ physics/%.o: src/physics/%.c
 
 # creates pong executable in $(BUILD_PATH)
 # ========================================
-all: buildpath clean util.o pong physics input.o src/main.c
+all: buildpath clean util.o pong physics input.o game.o src/main.c
 	$(CC) $(CFLAGS) $(shell find "$(BUILD_PATH)"/src/ -name "*.o") src/main.c -o "$(BUILD_PATH)"/pong
 
 physics: physics/collision.o physics/line.o physics/ratio.o physics/vector.o

@@ -1,7 +1,7 @@
+#include "util.h"
+
 #include <stdlib.h>
 #include <curses.h>
-
-#include "util.h"
 
 struct vector get_max_bounds() {
     /*

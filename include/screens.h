@@ -9,6 +9,7 @@ extern "C" {
 
 int screen_start(unsigned int* refresh_rate, bool* is_multiplayer);
 int screen_pause(void);
+int screen_win(char const* player);
 
 #ifdef __cplusplus
 }
