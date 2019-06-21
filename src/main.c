@@ -12,7 +12,7 @@
 #include <sys/ioctl.h>
 
 #include "board.h"
-#include "menu.h"
+#include "screens.h"
 
 #include "input.h"
 #include "render.h"
@@ -98,86 +98,13 @@ useconds_t period_from_freq(unsigned int hz) {
     return 1.0/hz * usec_per_sec;
 }
 
-bool get_confirmation(void) {
-    chtype c = getch();
-    return c == 'y' || c == 'Y';
-}
-
-int print_centered(char* msg, int y) {
-    /*
-     * print message at specified y-coordinate, centered horizontally
-     */
-
-    int x_start  = center_in_window(strlen(msg));
-    return mvaddstr(y, x_start, msg);
-}
-
-int run_menu(unsigned int* refresh_rate, bool* is_multiplayer) {
-    /*
-     * ask user for some game settings.
-     *
-     * note: this could definitely be accomplished more elegantly,
-     *       but it's a little thrown together due to time constraints.
-     *
-     * note 2: function takes a pointer to refresh_rate instead of
-     *         explicitly manipulating PONG_REFRESH_RATE intentionally,
-     *         to minimize side effects.
-     */
-
-    struct vector bounds = get_max_bounds();
-
-    if (bounds.x == -1) {
-        return ERR;
-    }
-
-    int y_center = bounds.y / 2;
-
-    // let getch() block
-    TRY_FN( nodelay(stdscr, FALSE) );
-
-    // first user prompt (mode)
-    TRY_FN( clear() );
-    TRY_FN( print_centered("Enable multiplayer? [y/N]", y_center-2) );
-
-    *is_multiplayer = get_confirmation();
-
-    // second user prompt (difficulty)
-    TRY_FN( clear() );
-    TRY_FN( print_centered("Enable hard mode? [y/N]", y_center-2) );
-
-    if (get_confirmation()) {
-        *refresh_rate = PONG_HARD_HZ;
-    } else {
-        *refresh_rate = PONG_EASY_HZ;
-    }
-
-    // third user prompt (controls)
-    TRY_FN( clear() );
-    TRY_FN( print_centered("Controls:", y_center-2) );
-
-    if (*is_multiplayer) {
-        TRY_FN( print_centered("Player 1 (left) moves up/down with W/S.", y_center-1) );
-        TRY_FN( print_centered("Player 2 (right) moves up/down with I/K.", y_center) );
-    } else {
-        TRY_FN( print_centered("Move the paddle up/down with W/S.", y_center-1) );
-    }
-
-    TRY_FN( print_centered("Don't let the ball get past your paddle!", y_center+2) );
-    TRY_FN( getch() );
-    TRY_FN( clear() );
-
-    TRY_FN( nodelay(stdscr, TRUE) );
-
-    return OK;
-}
-
 int run_game(void) {
     /*
      * runs the starting menu and main game loop
      */
 
     bool is_multiplayer;
-    TRY_FN( run_menu(&PONG_REFRESH_RATE, &is_multiplayer) );
+    TRY_FN( screen_start(&PONG_REFRESH_RATE, &is_multiplayer) );
 
     if (main_board != NULL) {
         // reset board if it already exists
@@ -208,7 +135,7 @@ void restart_game(int signal) {
     (void) signal;
     bool is_multiplayer = false;
 
-    run_menu(&PONG_REFRESH_RATE, &is_multiplayer);
+    screen_start(&PONG_REFRESH_RATE, &is_multiplayer);
     main_board = board_init(is_multiplayer);
 }
 

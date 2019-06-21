@@ -1,5 +1,5 @@
 #include "input.h"
-#include "pause.h"
+#include "screens.h"
 
 #include <signal.h>
 
@@ -15,8 +15,8 @@ int board_handle_input(struct board* b) {
         return board_move_paddle(b, 1, -1);
     case INPUT_P2_DOWN:
         return board_move_paddle(b, 1, 1);
-    case KEY_ENTER:
-        return pause_menu();
+    case INPUT_ESCAPE:
+        return screen_pause();
     case ERR:
         return ERR;
     default:
