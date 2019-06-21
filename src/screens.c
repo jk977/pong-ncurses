@@ -7,6 +7,10 @@
 #include <string.h>
 
 static bool get_confirmation(void) {
+    /*
+     * check if user wants to do something
+     */
+
     chtype c = getch();
     return c == 'y' || c == 'Y';
 }
@@ -22,15 +26,22 @@ static int print_centered(char* msg, int y_offset) {
 }
 
 static int screen_mode(bool* is_multiplayer) {
-    // first user prompt (mode)
+    /*
+     * let user adjust multiplayer status of game
+     */
+
     TRY_FN( clear() );
-    TRY_FN( print_centered("Enable multiplayer? [y/N]", -2) );
+    TRY_FN( print_centered("Play multiplayer? [y/N]", -2) );
 
     *is_multiplayer = get_confirmation();
     return OK;
 }
 
 static int screen_difficulty(unsigned int* refresh_rate) {
+    /*
+     * let user adjust the difficulty
+     */
+
     TRY_FN( clear() );
     TRY_FN( print_centered("Enable hard mode? [y/N]", -2) );
 
@@ -44,6 +55,10 @@ static int screen_difficulty(unsigned int* refresh_rate) {
 }
 
 static int screen_controls(void) {
+    /*
+     * display the controls.
+     */
+
     TRY_FN( clear() );
     TRY_FN( print_centered("Controls:", -2) );
 
@@ -79,32 +94,32 @@ int screen_start(unsigned int* refresh_rate, bool* is_multiplayer) {
 
 int screen_pause(void) {
     /*
-     * simple pause menu with several options
+     * simple pause menu with a small number of options
      */
 
     TRY_FN( nodelay(stdscr, FALSE) );
 
     TRY_FN( clear() );
-    TRY_FN( print_centered("Make a selection:", -3) );
-    TRY_FN( print_centered("c - controls", -2) );
-    TRY_FN( print_centered("r - restart", -1) );
-    TRY_FN( print_centered("enter - continue", 0) );
+    TRY_FN( print_centered("Make a selection:", -2) );
+    TRY_FN( print_centered("1 - controls",      -1) );
+    TRY_FN( print_centered("2 - restart",       0) );
+    TRY_FN( print_centered("enter - continue",  1) );
 
-    bool invalid_option = true;
+    bool invalid_choice = true;
 
-    while (invalid_option) {
+    while (invalid_choice) {
         switch (getch()) {
-        case 'c':
+        case '1':
             TRY_FN( screen_controls() );
-            invalid_option = false;
+            invalid_choice = false;
             break;
-        case 'r':
+        case '2':
             kill(0, PONG_RESTART_SIG);
-            invalid_option = false;
+            invalid_choice = false;
             break;
         case '\n':
         case '\r':
-            invalid_option = false;
+            invalid_choice = false;
             break;
         default:
             break;
