@@ -122,6 +122,7 @@ int game_run(void) {
         return ERR;
     }
 
+    // get initial game settings from user
     bool is_multiplayer;
     TRY_FN( screen_start(&PONG_REFRESH_RATE, &is_multiplayer) );
 
@@ -138,6 +139,7 @@ int game_run(void) {
         return ERR;
     }
 
+    // game loop
     while (true) {
         board_handle_input(main_board);
 

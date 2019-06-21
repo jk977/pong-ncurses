@@ -1,5 +1,3 @@
-#define _DEFAULT_SOURCE
-
 #ifdef DEBUG
 #   include <stdio.h>
 #   include <string.h>
