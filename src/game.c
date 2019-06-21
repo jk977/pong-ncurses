@@ -64,10 +64,16 @@ static useconds_t period_from_freq(unsigned int hz) {
 }
 
 static int handle_win_condition(struct board* b) {
+    /*
+     * checks if either player wins and displays the appropriate win screen
+     * if conditions are met
+     */
+
     bool p1_wins = b->p1_score >= PONG_WIN_SCORE;
     bool p2_wins = b->p2_score >= PONG_WIN_SCORE;
 
     if (!p1_wins && !p2_wins) {
+        // no one wins, so just leave
         return OK;
     }
     
@@ -75,8 +81,8 @@ static int handle_win_condition(struct board* b) {
 
     if (p1_wins) {
         status = screen_win("P1");
-    } else if (p2_wins) {
-        if (b->p1_score < 0) {
+    } else {
+        if (b->players[1] == NULL) {
             // single-player game
             status = screen_win("The wall");
         } else {
@@ -85,9 +91,20 @@ static int handle_win_condition(struct board* b) {
         }
     }
 
-    // game restarts on SIGUSR1
-    kill(0, SIGUSR1);
+    kill(0, PONG_RESTART_SIG);
     return status;
+}
+
+static void sig_restart(int signal) {
+    /*
+     * restart the game by replacing the board with a new one.
+     */
+
+    (void) signal;
+    bool is_multiplayer = false;
+
+    screen_start(&PONG_REFRESH_RATE, &is_multiplayer);
+    main_board = board_init(is_multiplayer);
 }
 
 int game_run(void) {
@@ -97,11 +114,11 @@ int game_run(void) {
 
     TRY_FN( setup_curses() );
 
-    // when SIGUSR1 received, restart game
+    // install restart signal handler
     struct sigaction act = {0};
-    act.sa_handler = game_restart;
+    act.sa_handler = sig_restart;
 
-    if (sigaction(SIGUSR1, &act, NULL) == -1) {
+    if (sigaction(PONG_RESTART_SIG, &act, NULL) == -1) {
         ERROR("Failed to install signal handler.");
         return ERR;
     }
@@ -134,13 +151,5 @@ int game_run(void) {
     }
 
     return OK;
-}
-
-void game_restart(int signal) {
-    (void) signal;
-    bool is_multiplayer = false;
-
-    screen_start(&PONG_REFRESH_RATE, &is_multiplayer);
-    main_board = board_init(is_multiplayer);
 }
 

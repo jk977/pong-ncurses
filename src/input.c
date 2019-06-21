@@ -13,7 +13,9 @@ int board_handle_input(struct board* b) {
         return board_move_paddle(b, 1, -1);
     case INPUT_P2_DOWN:
         return board_move_paddle(b, 1, 1);
-    case KEY_ENTER:
+    case '\n':
+    case '\r':
+        // enter key is pressed
         return screen_pause();
     case ERR:
         return ERR;

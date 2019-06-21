@@ -6,6 +6,7 @@
 #define CONFIG_H_
 
 #include <curses.h>
+#include <signal.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,6 +29,9 @@ extern "C" {
 
 #define PONG_EASY_HZ    15
 #define PONG_HARD_HZ    30
+
+#define PONG_RESTART_SIG    SIGUSR1
+#define PONG_PAUSE_SIG      SIGUSR2
 
 // runtime settings
 extern unsigned int PONG_REFRESH_RATE; /* Hz */

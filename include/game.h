@@ -8,7 +8,6 @@ extern "C" {
 #endif
 
 int game_run(void);
-void game_restart(int signal);
 
 extern struct board* main_board;
 
