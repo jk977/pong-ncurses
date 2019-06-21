@@ -37,7 +37,7 @@ all: buildpath clean util.o pong physics input.o game.o src/main.c
 
 physics: physics/collision.o physics/line.o physics/ratio.o physics/vector.o
 
-pong: objects.o screens.o board.o render.o update.o
+pong: config.o objects.o screens.o board.o render.o update.o
 
 # ensures proper build layout
 # ===========================

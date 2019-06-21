@@ -85,7 +85,6 @@ int screen_pause(void) {
     TRY_FN( nodelay(stdscr, FALSE) );
 
     TRY_FN( clear() );
-
     TRY_FN( print_centered("Make a selection:", -3) );
     TRY_FN( print_centered("c - controls", -2) );
     TRY_FN( print_centered("r - restart", -1) );

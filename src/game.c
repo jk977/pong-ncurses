@@ -17,7 +17,6 @@
 #include <signal.h>
 #include <unistd.h>
 
-unsigned int PONG_REFRESH_RATE = PONG_EASY_HZ;
 struct board* main_board = NULL;
 
 static int setup_curses(void) {
