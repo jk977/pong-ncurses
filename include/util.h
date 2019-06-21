@@ -27,11 +27,11 @@ extern "C" {
 #   define TRACE(...)
 #endif
 
-// macro that returns ERR if an OK/ERR-returning function fails
+// macro that returns ERR early if an OK/ERR-returning function fails
 #define TRY_FN(ret)                                                     \
     do {                                                                \
         if (ret == ERR) {                                               \
-            ERROR("TRY_FN failed (%s: line %d).", __FILE__, __LINE__);   \
+            ERROR("TRY_FN failed (%s: line %d).", __FILE__, __LINE__);  \
             return ERR;                                                 \
         }                                                               \
     } while (0)

@@ -39,3 +39,5 @@ To compile the prototypes, run `make proto`. The executables will be placed in `
 ```
 
 For more information about each file in the project, view the corresponding header file in `include/` for a brief description.
+
+Note that most functions are prefixed with the translation unit they're from (e.g., `board_init()` is in `board.h`).
