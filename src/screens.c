@@ -2,6 +2,8 @@
 #include "util.h"
 #include "config.h"
 
+#include <stdlib.h>
+
 #include <curses.h>
 #include <signal.h>
 #include <string.h>
@@ -103,7 +105,8 @@ int screen_pause(void) {
     TRY_FN( print_centered("Make a selection:", -2) );
     TRY_FN( print_centered("1 - controls",      -1) );
     TRY_FN( print_centered("2 - restart",       0) );
-    TRY_FN( print_centered("enter - continue",  1) );
+    TRY_FN( print_centered("3 - quit game",     1) );
+    TRY_FN( print_centered("enter - continue",  2) );
 
     bool invalid_choice = true;
 
@@ -117,6 +120,8 @@ int screen_pause(void) {
             kill(0, PONG_RESTART_SIG);
             invalid_choice = false;
             break;
+        case '3':
+            exit(EXIT_SUCCESS);
         case '\n':
         case '\r':
             invalid_choice = false;
