@@ -6,9 +6,9 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
-#include <stdio.h>
-
 #include "physics/vector.h"
+
+#include <stdio.h>
 
 #ifdef __cplusplus
 extern "C" {

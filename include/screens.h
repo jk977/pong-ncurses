@@ -1,3 +1,7 @@
+/*
+ * screens.h: Menu screens used in the game.
+ */
+
 #ifndef SCREENS_H_
 #define SCREENS_H_
 

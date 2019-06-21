@@ -5,12 +5,12 @@
 #ifndef OBJECTS_H_
 #define OBJECTS_H_
 
-#include <stdbool.h>
-
 #include "physics/vector.h"
 #include "physics/line.h"
 
 #include "config.h"
+
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {

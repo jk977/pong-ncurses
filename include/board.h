@@ -1,10 +1,14 @@
+/*
+ * board.h: Structure representation of the game board.
+ */
+
 #ifndef BOARD_H_
 #define BOARD_H_
 
-#include <stdbool.h>
-
 #include "menu.h"
 #include "objects.h"
+
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {

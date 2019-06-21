@@ -5,10 +5,10 @@
 #ifndef LINE_H_
 #define LINE_H_
 
-#include <stdbool.h>
-
 #include "physics/vector.h"
 #include "physics/ratio.h"
+
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
