@@ -161,7 +161,7 @@ struct board* board_init(bool is_multiplayer) {
         status = setup_singleplayer(b);
     }
 
-    if (status != 0) {
+    if (status == ERR) {
         free(b);
         b = NULL;
     }
